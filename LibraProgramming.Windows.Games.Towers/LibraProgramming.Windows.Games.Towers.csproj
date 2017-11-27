@@ -7,8 +7,8 @@
     <ProjectGuid>{28A92EA1-0435-436E-8C5A-572BF72349B0}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LibraProgrammingWindows.Games.Towers</RootNamespace>
-    <AssemblyName>LibraProgrammingWindows.Games.Towers</AssemblyName>
+    <RootNamespace>LibraProgramming.Windows.Games.Towers</RootNamespace>
+    <AssemblyName>LibraProgramming.Windows.Games.Towers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
@@ -17,7 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>LibraProgrammingWindows.Games.Towers_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>4A6BECD0C6CA415507F5DA7DBD5C974190DA567D</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -95,16 +96,58 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="Bootstrap.cs" />
+    <Compile Include="Core\ServiceContainer\CreatorFactory.cs" />
+    <Compile Include="Core\ServiceContainer\Factory.cs" />
+    <Compile Include="Core\ServiceContainer\IInstanceProvider.cs" />
+    <Compile Include="Core\ServiceContainer\InstanceLifetime.CreateNewLifetime.cs" />
+    <Compile Include="Core\ServiceContainer\InstanceLifetime.cs" />
+    <Compile Include="Core\ServiceContainer\InstanceLifetime.SingletonLifetime.cs" />
+    <Compile Include="Core\ServiceContainer\IServiceLocator.cs" />
+    <Compile Include="Core\ServiceContainer\IServiceRegistry.cs" />
+    <Compile Include="Core\ServiceContainer\PrefferedConstructorAttribute.cs" />
+    <Compile Include="Core\ServiceContainer\ServiceAttribute.cs" />
+    <Compile Include="Core\ServiceContainer\ServiceLocator.cs" />
+    <Compile Include="Core\ServiceContainer\ServiceLocator.InstanceCollection.cs" />
+    <Compile Include="Core\ServiceContainer\ServiceLocatorException.cs" />
+    <Compile Include="Core\ServiceContainer\ServiceTypeReference.cs" />
+    <Compile Include="Core\ServiceContainer\Throw.cs" />
+    <Compile Include="Core\ServiceContainer\TypeFactory.cs" />
+    <Compile Include="Core\WeakDelegate.cs" />
+    <Compile Include="Core\WeakDelegateBase.cs" />
+    <Compile Include="Core\WeakEvent.cs" />
+    <Compile Include="Core\WeakEventHandler.cs" />
+    <Compile Include="GameEngine\Enemy.cs" />
+    <Compile Include="GameEngine\EnemyWaveEmitter.cs" />
+    <Compile Include="GameEngine\EnemyWaveFactory.cs" />
+    <Compile Include="GameEngine\FastMovementEnemy.cs" />
+    <Compile Include="GameEngine\GameplayController.cs" />
+    <Compile Include="GameEngine\IEnemyProvider.cs" />
+    <Compile Include="GameEngine\IScene.cs" />
+    <Compile Include="GameEngine\ISceneNode.cs" />
+    <Compile Include="GameEngine\ISceneNodeState.cs" />
+    <Compile Include="GameEngine\LandscapeMap.cs" />
+    <Compile Include="GameEngine\LaserBeam.cs" />
+    <Compile Include="GameEngine\LaserTower.cs" />
+    <Compile Include="GameEngine\MyHomeBase.cs" />
+    <Compile Include="GameEngine\MyHomeBaseHealthIndicator.cs" />
+    <Compile Include="GameEngine\Scene.cs" />
+    <Compile Include="GameEngine\SceneNode.Collection.cs" />
+    <Compile Include="GameEngine\SceneNode.cs" />
+    <Compile Include="GameEngine\SceneNodeState.cs" />
+    <Compile Include="GameEngine\StateAwareSceneNode.cs" />
+    <Compile Include="GameEngine\UserPointer.cs" />
+    <Compile Include="GameEngine\WayPath.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="LibraProgrammingWindows.Games.Towers_TemporaryKey.pfx" />
+    <None Include="LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -121,15 +164,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Win2D.uwp">
+      <Version>1.21.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.1</Version>
-    </PackageReference>
+    <SDKReference Include="WindowsDesktop, Version=10.0.15063.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
