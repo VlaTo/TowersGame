@@ -17,19 +17,18 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     public sealed class GameplayController
     {
         private readonly EnemyWaveFactory waveFactory;
-        private readonly IScene scene;
+        private readonly Game game;
+//        private readonly IScene scene;
         private readonly EnemyProvider enemyProvider;
-        private readonly IList<Enemy> enemies;
-        private MyHomeBase homeBase;
-        private UserPointer userPointer;
+//        private MyHomeBase homeBase;
+//        private UserPointer userPointer;
 
         [PrefferedConstructor]
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
         {
-            this.scene = scene;
             this.waveFactory = waveFactory;
-            enemies = new List<Enemy>();
-            enemyProvider = new EnemyProvider(enemies);
+            game = new Game(scene);
+            enemyProvider = new EnemyProvider(game.Enemies);
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <returns></returns>
         public IScene ConfigureScene(Size size)
         {
-            var waypoints = new Collection<Point>
+            /*var waypoints = new Collection<Point>
             {
                 new Point(15.0d, 120.0d),
                 new Point(500.0d, 120.0d),
@@ -83,7 +82,14 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 Colors.Chartreuse,
                 Colors.Red)
             );
-            scene.Children.Add(userPointer);
+            scene.Children.Add(userPointer);*/
+
+            var scene = game.Scene;
+            var targetProvider = new MapTargetProvider();
+            var point = new Vector2(3 * 5.0f, 10 * 5.0f);
+            var enemy = new Enemy(point, targetProvider, 250.0d, 0.56d, 1.0d);
+
+            scene.Children.Add(enemy);
 
             return scene;
         }
@@ -93,7 +99,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// </summary>
         public void Shutdown()
         {
-            scene.Dispose();
+            game.Dispose();
         }
 
         /// <summary>
@@ -102,55 +108,55 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <param name="timing"></param>
         public void Update(CanvasTimingInformation timing)
         {
-            scene.Update(timing.ElapsedTime);
+            game.Scene.Update(timing.ElapsedTime);
         }
 
         public void DrawScene(CanvasDrawingSession session)
         {
-            scene.Draw(session);
+            game.Scene.Draw(session);
         }
 
         public void PointerMoved(PointerPoint pointer)
         {
-            userPointer.Position = pointer.Position;
+//            userPointer.Position = pointer.Position;
         }
 
         public void PointerEntered()
         {
-            userPointer.IsVisible = true;
+//            userPointer.IsVisible = true;
         }
 
         public void PointerExited()
         {
-            userPointer.IsVisible = false;
+//            userPointer.IsVisible = false;
         }
 
         public bool PointerPressed(ICanvasResourceCreatorWithDpi creator, VirtualKeyModifiers keyModifiers, PointerPoint pointerPoint)
         {
-            var position = pointerPoint.Position;
+            /*var position = pointerPoint.Position;
             var tower = new LaserTower(enemyProvider, position.ToVector2(), Colors.Yellow, 0.7d, 150.0d);
 
             tower.CreateResources(creator, CanvasCreateResourcesReason.FirstTime);
-            scene.Children.Add(tower);
+            scene.Children.Add(tower);*/
 
             return true;
         }
 
-        private void OnEnemyCreated(object sender, EnemyEventArgs e)
+        /*private void OnEnemyCreated(object sender, EnemyEventArgs e)
         {
             enemies.Add(e.Enemy);
-        }
+        }*/
 
-        private void OnEnemyKilled(object sender, EnemyEventArgs e)
+        /*private void OnEnemyKilled(object sender, EnemyEventArgs e)
         {
             enemies.Remove(e.Enemy);
-        }
+        }*/
 
-        private void OnEnemyReachedEnd(object sender, EnemyEventArgs e)
+        /*private void OnEnemyReachedEnd(object sender, EnemyEventArgs e)
         {
             homeBase.TakeDamage(e.Enemy.Damage);
             enemies.Remove(e.Enemy);
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -167,6 +173,29 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             public ICollection<Enemy> GetEnemies()
             {
                 return enemies;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class MapTargetProvider : ITargetProvider
+        {
+            public MapTargetProvider()
+            {
+            }
+
+            public IList<Vector2> GetWaypoints(Vector2 fromPosition)
+            {
+                var cell = new Vector2(fromPosition.X / 5.0f, fromPosition.Y / 5.0f);
+
+                return new List<Vector2>
+                {
+                    new Vector2((cell.X + 1) * 5.0f, cell.Y * 5.0f),
+                    new Vector2((cell.X + 1) * 5.0f, (cell.Y + 1) * 5.0f),
+                    new Vector2((cell.X + 1) * 5.0f, (cell.Y + 2) * 5.0f),
+                    new Vector2(cell.X * 5.0f, (cell.Y + 2) * 5.0f)
+                };
             }
         }
     }

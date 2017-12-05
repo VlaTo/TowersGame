@@ -121,11 +121,14 @@
     <Compile Include="GameEngine\EnemyWaveEmitter.cs" />
     <Compile Include="GameEngine\EnemyWaveFactory.cs" />
     <Compile Include="GameEngine\FastMovementEnemy.cs" />
+    <Compile Include="GameEngine\Game.cs" />
     <Compile Include="GameEngine\GameplayController.cs" />
     <Compile Include="GameEngine\IEnemyProvider.cs" />
+    <Compile Include="GameEngine\IGameState.cs" />
     <Compile Include="GameEngine\IScene.cs" />
     <Compile Include="GameEngine\ISceneNode.cs" />
     <Compile Include="GameEngine\ISceneNodeState.cs" />
+    <Compile Include="GameEngine\ITargetProvider.cs" />
     <Compile Include="GameEngine\LandscapeMap.cs" />
     <Compile Include="GameEngine\LaserBeam.cs" />
     <Compile Include="GameEngine\LaserTower.cs" />

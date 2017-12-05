@@ -6,6 +6,7 @@ using Microsoft.Graphics.Canvas;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public class FastMovementEnemy : Enemy
     {
         public FastMovementEnemy(Point origin, double health, ICollection<Point> waypoints, double speed, double damage)
@@ -26,4 +27,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             DrawHealthBar(session);
         }
     }
+*/
 }

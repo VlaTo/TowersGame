@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -16,6 +17,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         private readonly double healthAmount;
         private readonly double speed;
+        private readonly ITargetProvider targetProvider;
         private double health;
 
         public double Angle
@@ -28,11 +30,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         {
             get;
             private set;
-        }
-
-        public ICollection<Point> Waypoints
-        {
-            get;
         }
 
         public Vector2 Position
@@ -84,21 +81,21 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             set;
         }
 
-        public Enemy(Point origin, double health, ICollection<Point> waypoints, double speed, double damage)
+        public Enemy(Vector2 origin, ITargetProvider targetProvider, double health, double speed, double damage)
         {
+            this.targetProvider = targetProvider;
             this.health = health;
             this.speed = speed;
             healthAmount = health;
             Angle = 0.0d;
-            Position = origin.ToVector2();
-            Waypoints = waypoints;
+            Position = origin;
             Damage = damage;
-            State = new StartMovementState(0);
+            State = new CalculatePathState();
         }
 
         public override void Update(TimeSpan elapsed)
         {
-            if (null == Waypoints)
+            if (false == IsAlive)
             {
                 return;
             }
@@ -135,7 +132,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             if (false == IsAlive)
             {
-                State = new KilledState();
+//                State = new KilledState();
             }
         }
 
@@ -147,7 +144,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         public void Die()
         {
-            var emitter = (EnemyWaveEmitter)Parent;
+            var emitter = (EnemyWaveEmitter) Parent;
             emitter.ReportDie(this);
         }
 
@@ -167,14 +164,39 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class StartMovementState : SceneNodeState
+        private class CalculatePathState : SceneNodeState
         {
-            private readonly int index;
             private Enemy enemy;
 
-            public StartMovementState(int index)
+            public override void Leave(ISceneNode node)
             {
-                this.index = index;
+                enemy = null;
+            }
+
+            public override void Enter(ISceneNode node)
+            {
+                enemy = (Enemy) node;
+            }
+
+            public override void Update(TimeSpan elapsed)
+            {
+                var targetProvider = enemy.targetProvider;
+                var waypoints = targetProvider.GetWaypoints(enemy.Position);
+                enemy.State = new StartMovingState(waypoints);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class StartMovingState : SceneNodeState
+        {
+            private readonly IList<Vector2> waypoints;
+            private Enemy enemy;
+
+            public StartMovingState(IList<Vector2> waypoints)
+            {
+                this.waypoints = waypoints;
             }
 
             public override void Leave(ISceneNode node)
@@ -184,56 +206,44 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             public override void Enter(ISceneNode node)
             {
-                enemy = (Enemy)node;
+                enemy = (Enemy) node;
+                //enemy.Angle = Math.Atan2(destination.Y - enemy.Position.Y, destination.X - enemy.Position.X);
             }
 
             public override void Update(TimeSpan elapsed)
             {
-                if (0 == enemy.Waypoints.Count)
+                /*if (1.0f >= Vector2.Distance(enemy.Position, destination))
+                {
+                    enemy.State = new CalculatePathState(index + 1);
+                    return;
+                }
+
+                var direction = new Point(Math.Cos(enemy.Angle), Math.Sin(enemy.Angle));
+
+                enemy.Position += direction.ToVector2() * (float) enemy.speed;*/
+
+                if (false == waypoints.Any())
                 {
                     enemy.State = Empty;
                     return;
                 }
 
-                if (index >= enemy.Waypoints.Count)
-                {
-                    enemy.State = new ReachedEndState();
-                    return;
-                }
-
-                var point = GetWaypoint(enemy.Waypoints, index);
-
-                enemy.State = new WaypointMovementState(point.ToVector2(), index);
-            }
-
-            private static Point GetWaypoint(IEnumerable<Point> waypoints, int number)
-            {
-                foreach (var waypoint in waypoints)
-                {
-                    if (0 < number--)
-                    {
-                        continue;
-                    }
-
-                    return waypoint;
-                }
-
-                throw new InvalidDataException();
+                enemy.State = new MoveToNextWaypointState(waypoints, 0);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private class WaypointMovementState : SceneNodeState
+        private class MoveToNextWaypointState : SceneNodeState
         {
+            private readonly IList<Vector2> waypoints;
             private readonly int index;
-            private readonly Vector2 destination;
             private Enemy enemy;
 
-            public WaypointMovementState(Vector2 destination, int index)
+            public MoveToNextWaypointState(IList<Vector2> waypoints, int index)
             {
-                this.destination = destination;
+                this.waypoints = waypoints;
                 this.index = index;
             }
 
@@ -245,66 +255,109 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             public override void Enter(ISceneNode node)
             {
                 enemy = (Enemy) node;
-                enemy.Angle = Math.Atan2(destination.Y - enemy.Position.Y, destination.X - enemy.Position.X);
+            }
+
+            public override void Update(TimeSpan elapsed)
+            {
+                if (index >= waypoints.Count)
+                {
+                    return;
+                }
+
+                var waypoint = waypoints[index];
+                var angle = Math.Atan2(waypoint.Y - enemy.Position.Y, waypoint.X - enemy.Position.X);
+
+                enemy.State = new RotatingState(angle, waypoints, index + 1);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class RotatingState : SceneNodeState
+        {
+            private readonly double targetAngle;
+            private readonly IList<Vector2> waypoints;
+            private readonly int nextIndex;
+            private Enemy enemy;
+            private double delta;
+            private double angle;
+
+            public RotatingState(double targetAngle, IList<Vector2> waypoints, int nextIndex)
+            {
+                this.targetAngle = targetAngle;
+                this.waypoints = waypoints;
+                this.nextIndex = nextIndex;
+            }
+
+            public override void Leave(ISceneNode node)
+            {
+                enemy = null;
+            }
+
+            public override void Enter(ISceneNode node)
+            {
+                enemy = (Enemy) node;
+
+                if (Single.Epsilon >= (enemy.Angle - targetAngle))
+                {
+                    enemy.State = new MoveToWaypointState(waypoints, nextIndex);
+                }
+                else
+                {
+                    delta = enemy.Angle > targetAngle ? 0.05d : -0.05d;
+                }
+            }
+
+            public override void Update(TimeSpan elapsed)
+            {
+                enemy.Angle += delta;
+
+                if (Double.Epsilon >= (enemy.Angle - targetAngle))
+                {
+                    enemy.State = new MoveToWaypointState(waypoints, nextIndex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class MoveToWaypointState : SceneNodeState
+        {
+            private readonly IList<Vector2> waypoints;
+            private readonly int index;
+            private Enemy enemy;
+            private Vector2 destination;
+
+            public MoveToWaypointState(IList<Vector2> waypoints, int index)
+            {
+                this.waypoints = waypoints;
+                this.index = index;
+            }
+
+            public override void Leave(ISceneNode node)
+            {
+                enemy = null;
+            }
+
+            public override void Enter(ISceneNode node)
+            {
+                enemy = (Enemy) node;
+                destination = waypoints[index];
             }
 
             public override void Update(TimeSpan elapsed)
             {
                 if (1.0f >= Vector2.Distance(enemy.Position, destination))
                 {
-                    enemy.State = new StartMovementState(index + 1);
+                    enemy.State = new MoveToNextWaypointState(waypoints, index + 1);
                     return;
                 }
 
                 var direction = new Point(Math.Cos(enemy.Angle), Math.Sin(enemy.Angle));
 
                 enemy.Position += direction.ToVector2() * (float) enemy.speed;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private class ReachedEndState : SceneNodeState
-        {
-            private Enemy enemy;
-
-            public override void Leave(ISceneNode node)
-            {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy) node;
-            }
-
-            public override void Update(TimeSpan elapsed)
-            {
-                enemy.ReportDamage();
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private class KilledState : SceneNodeState
-        {
-            private Enemy enemy;
-
-            public override void Leave(ISceneNode node)
-            {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy)node;
-            }
-
-            public override void Update(TimeSpan elapsed)
-            {
-                enemy.Die();
             }
         }
     }
