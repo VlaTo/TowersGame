@@ -143,7 +143,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 if (TimeSpan.Zero <= duration)
                 {
-                    enemy.TakeDamage(tower.damage);
+                    //enemy.TakeDamage(tower.damage);
 
                     if (false == enemy.IsAlive)
                     {

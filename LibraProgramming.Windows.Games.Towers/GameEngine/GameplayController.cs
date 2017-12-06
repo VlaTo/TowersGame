@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Numerics;
 using Windows.Foundation;
@@ -85,9 +86,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(userPointer);*/
 
             var scene = game.Scene;
-            var targetProvider = new MapTargetProvider();
-            var point = new Vector2(3 * 5.0f, 10 * 5.0f);
-            var enemy = new Enemy(point, targetProvider, 250.0d, 0.56d, 1.0d);
+            var transformer = new MapCoordinatesTransformer();
+            var pathFinder = new MapPathFinder();
+            var origin = new CellPosition(3, 3);
+            var enemy = new Enemy(origin, transformer, pathFinder, 250.0d, 0.56f, 1.0d);
 
             scene.Children.Add(enemy);
 
@@ -179,23 +181,73 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MapTargetProvider : ITargetProvider
+        private class MapCoordinatesTransformer : ICoordinatesTransformer
         {
-            public MapTargetProvider()
+            private const float CellHeight = 10.0f;
+            private const float CellWidth = 10.0f;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="position"></param>
+            /// <returns></returns>
+            public Vector2 GetPoint(CellPosition position)
             {
+                var point = new Vector2(CellWidth / 2.0f, CellHeight / 2.0f);
+
+                if (position.Column > 0)
+                {
+                    point.X += CellWidth * (position.Column - 1);
+                }
+
+                if (position.Row > 0)
+                {
+                    point.Y += CellHeight * (position.Row - 1);
+                }
+
+                return point;
             }
 
-            public IList<Vector2> GetWaypoints(Vector2 fromPosition)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="point"></param>
+            /// <returns></returns>
+            public CellPosition GetPosition(Vector2 point)
             {
-                var cell = new Vector2(fromPosition.X / 5.0f, fromPosition.Y / 5.0f);
+                var column = (int) (point.X / CellWidth);
+                var row = (int) (point.Y / CellHeight);
 
-                return new List<Vector2>
+                if (Math.IEEERemainder(point.X, CellWidth) >= Single.Epsilon)
                 {
-                    new Vector2((cell.X + 1) * 5.0f, cell.Y * 5.0f),
-                    new Vector2((cell.X + 1) * 5.0f, (cell.Y + 1) * 5.0f),
-                    new Vector2((cell.X + 1) * 5.0f, (cell.Y + 2) * 5.0f),
-                    new Vector2(cell.X * 5.0f, (cell.Y + 2) * 5.0f)
+                    column++;
+                }
+
+                if (Math.IEEERemainder(point.Y, CellHeight) >= Single.Epsilon)
+                {
+                    row++;
+                }
+
+                return new CellPosition(column, row);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private class MapPathFinder : IPathFinder
+        {
+            public CellPosition[] GetWaypoints(CellPosition position)
+            {
+                var waypoints = new List<CellPosition>
+                {
+                    new CellPosition(position.Column + 10, position.Row),
+                    new CellPosition(position.Column + 10, position.Row + 10),
+                    new CellPosition(position.Column, position.Row + 10),
+                    new CellPosition(position.Column, position.Row)
                 };
+                
+                return waypoints.ToArray();
             }
         }
     }
