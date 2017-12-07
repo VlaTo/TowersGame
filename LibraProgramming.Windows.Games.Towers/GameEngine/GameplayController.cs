@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.System;
@@ -22,7 +21,8 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 //        private readonly IScene scene;
         private readonly EnemyProvider enemyProvider;
 //        private MyHomeBase homeBase;
-//        private UserPointer userPointer;
+        private UserPointer userPointer;
+        private Seeker seeker;
 
         [PrefferedConstructor]
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
@@ -30,6 +30,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.waveFactory = waveFactory;
             game = new Game(scene);
             enemyProvider = new EnemyProvider(game.Enemies);
+            scene.SetController(this);
         }
 
         /// <summary>
@@ -61,7 +62,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 waypoints
             );
 
-            userPointer = new UserPointer(Colors.White);
             homeBase = new MyHomeBase(
                 new Rect(new Point(225.0d, 590.0d), new Size(50.0d, 20.0d)),
                 Colors.Black,
@@ -86,10 +86,17 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(userPointer);*/
 
             var scene = game.Scene;
+
+            /*seeker = new Seeker(new Vector2(100.0f, 100.0f), 0.85f, Colors.White, Colors.DarkSlateGray);
+            userPointer = new UserPointer(Colors.White);
+
+            scene.Children.Add(seeker);
+            scene.Children.Add(userPointer);*/
+
             var transformer = new MapCoordinatesTransformer();
             var pathFinder = new MapPathFinder();
             var origin = new CellPosition(3, 3);
-            var enemy = new Enemy(origin, transformer, pathFinder, 250.0d, 0.56f, 1.0d);
+            var enemy = new Enemy(origin, transformer, pathFinder, 250.0f, 0.56f, 1.0f);
 
             scene.Children.Add(enemy);
 
@@ -120,21 +127,26 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         public void PointerMoved(PointerPoint pointer)
         {
-//            userPointer.Position = pointer.Position;
+            userPointer.Position = pointer.Position;
+            seeker.LookAt(pointer.Position.ToVector2());
         }
 
         public void PointerEntered()
         {
-//            userPointer.IsVisible = true;
+            userPointer.IsVisible = true;
         }
 
         public void PointerExited()
         {
-//            userPointer.IsVisible = false;
+            userPointer.IsVisible = false;
         }
 
         public bool PointerPressed(ICanvasResourceCreatorWithDpi creator, VirtualKeyModifiers keyModifiers, PointerPoint pointerPoint)
         {
+            var position = pointerPoint.Position;
+
+            seeker.MoveTo(position.ToVector2());
+
             /*var position = pointerPoint.Position;
             var tower = new LaserTower(enemyProvider, position.ToVector2(), Colors.Yellow, 0.7d, 150.0d);
 

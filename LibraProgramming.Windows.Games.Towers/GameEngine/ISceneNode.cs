@@ -18,6 +18,11 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get;
         }
 
+        GameplayController Controller
+        {
+            get;
+        }
+
         void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason);
 
         void Draw(CanvasDrawingSession session);

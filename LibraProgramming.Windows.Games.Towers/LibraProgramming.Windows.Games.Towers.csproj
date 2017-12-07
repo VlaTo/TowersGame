@@ -140,6 +140,7 @@
     <Compile Include="GameEngine\SceneNode.Collection.cs" />
     <Compile Include="GameEngine\SceneNode.cs" />
     <Compile Include="GameEngine\SceneNodeState.cs" />
+    <Compile Include="GameEngine\Seeker.cs" />
     <Compile Include="GameEngine\StateAwareSceneNode.cs" />
     <Compile Include="GameEngine\UserPointer.cs" />
     <Compile Include="GameEngine\WayPath.cs" />
@@ -191,6 +192,12 @@
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

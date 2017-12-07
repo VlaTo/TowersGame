@@ -20,9 +20,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         private readonly float speed;
         private readonly ICoordinatesTransformer coordinatesTransformer;
         private readonly IPathFinder pathFinder;
-        private double health;
+        private float health;
 
-        public double Angle
+        public float Angle
         {
             get;
             protected set;
@@ -42,15 +42,15 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             set;
         }
 
-        public double Damage
+        public float Damage
         {
             get;
         }
 
-        public double Health
+        public float Health
         {
             get => health;
-            private set => health = Math.Max(0.0d, value);
+            private set => health = Math.Max(0.0f, value);
         }
 
         public bool IsAlive => 0.0d < Health;
@@ -89,9 +89,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             CellPosition origin,
             ICoordinatesTransformer coordinatesTransformer,
             IPathFinder pathFinder,
-            double health,
+            float health,
             float speed,
-            double damage)
+            float damage)
         {
             this.coordinatesTransformer = coordinatesTransformer;
             this.pathFinder = pathFinder;
@@ -100,7 +100,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             healthAmount = health;
 
-            Angle = 0.0d;
+            Angle = 0.0f;
             Damage = damage;
             Position = coordinatesTransformer.GetPoint(origin);
             State = new CalculateWaypointsState();
@@ -262,8 +262,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             {
                 var position = waypoints[index];
                 var point = enemy.coordinatesTransformer.GetPoint(position);
-                var angle = Math.Atan2(point.Y - enemy.Position.Y, point.X - enemy.Position.X);
-//                var temp = Math.Atan2(Math.Abs(point.Y - enemy.Position.Y), Math.Abs(point.X - enemy.Position.X));
+                var angle = (float) Math.Atan2(point.Y - enemy.Position.Y, point.X - enemy.Position.X);
 
                 var delta = enemy.Angle - angle;
 
@@ -283,15 +282,15 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// </summary>
         private class EnemyRotatingState : SceneNodeState
         {
-            private static readonly double pi34 = Math.PI * 1.5d;
-            private static readonly double pi2 = Math.PI * 0.5d;
+            private const float zero = 0.0f;
+            private const float pi_2 = (float) Math.PI * 0.5f;
 
-            private readonly double angle;
+            private readonly float angle;
             private readonly CellPosition[] waypoints;
             private readonly int index;
             private Enemy enemy;
 
-            public EnemyRotatingState(double angle, CellPosition[] waypoints, int index)
+            public EnemyRotatingState(float angle, CellPosition[] waypoints, int index)
             {
                 this.angle = angle;
                 this.waypoints = waypoints;
@@ -310,7 +309,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             public override void Update(TimeSpan elapsed)
             {
-                const double delta = 0.01d;
+                const float delta = 0.01f;
                 var distance = Math.Abs(angle - enemy.Angle);
 
                 if (delta >= distance)
@@ -321,7 +320,17 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                     return;
                 }
 
-                enemy.Angle += delta;
+                var temp1 = angle - enemy.Angle;
+                var temp2 = enemy.Angle - angle;
+
+                if (zero < angle)
+                {
+                    enemy.Angle += delta;
+                }
+                else if (zero > angle)
+                {
+                    ;
+                }
             }
         }
 

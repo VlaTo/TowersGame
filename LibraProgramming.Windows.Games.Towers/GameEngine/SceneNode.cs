@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 
@@ -35,14 +36,16 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         ICollection<ISceneNode> ISceneNode.Children => Children;
 
-        protected SceneNode.SceneNodeCollection Children
+        protected SceneNodeCollection Children
         {
             get;
         }
 
+        public virtual GameplayController Controller => parent?.Controller;
+
         protected SceneNode()
         {
-            Children = new SceneNode.SceneNodeCollection(this);
+            Children = new SceneNodeCollection(this);
         }
 
         public virtual void Draw(CanvasDrawingSession session)

@@ -7,12 +7,21 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// </summary>
     public class Scene : SceneNode, IScene
     {
+        private GameplayController controller;
+
+        public override GameplayController Controller => controller;
+
         /// <summary>
         /// 
         /// </summary>
         [PrefferedConstructor]
         public Scene()
         {
+        }
+
+        public void SetController(GameplayController value)
+        {
+            controller = value;
         }
 
         /// <summary>
