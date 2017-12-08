@@ -282,12 +282,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// </summary>
         private class EnemyRotatingState : SceneNodeState
         {
-            private const float zero = 0.0f;
-            private const float pi_2 = (float) Math.PI * 0.5f;
+            private const float step = 0.01f;
 
             private readonly float angle;
             private readonly CellPosition[] waypoints;
             private readonly int index;
+            private float delta;
             private Enemy enemy;
 
             public EnemyRotatingState(float angle, CellPosition[] waypoints, int index)
@@ -305,14 +305,29 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             public override void Enter(ISceneNode node)
             {
                 enemy = (Enemy) node;
+
+                var sign = Math.Sign(enemy.Angle);
+
+                if (sign == Math.Sign(angle))
+                {
+                    if (sign > 0)
+                    {
+                        delta = enemy.Angle > angle ? -step : step;
+                    }
+                    else
+                    {
+                        delta = enemy.Angle < angle ? -step : step;
+                    }
+                }
+                else
+                {
+                    delta = step;
+                }
             }
 
             public override void Update(TimeSpan elapsed)
             {
-                const float delta = 0.01f;
-                var distance = Math.Abs(angle - enemy.Angle);
-
-                if (delta >= distance)
+                if (Math.Abs(angle - enemy.Angle) <= step)
                 {
                     enemy.Angle = angle;
                     enemy.State = new EnemyMovingState(waypoints, index);
@@ -320,17 +335,14 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                     return;
                 }
 
-                var temp1 = angle - enemy.Angle;
-                var temp2 = enemy.Angle - angle;
+                var value = enemy.Angle + delta;
 
-                if (zero < angle)
+                if (value > Math.PI)
                 {
-                    enemy.Angle += delta;
+                    value *= -1.0f;
                 }
-                else if (zero > angle)
-                {
-                    ;
-                }
+
+                enemy.Angle = value;
             }
         }
 

@@ -21,8 +21,8 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 //        private readonly IScene scene;
         private readonly EnemyProvider enemyProvider;
 //        private MyHomeBase homeBase;
-        private UserPointer userPointer;
-        private Seeker seeker;
+//        private UserPointer userPointer;
+//        private Seeker seeker;
 
         [PrefferedConstructor]
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
@@ -127,25 +127,25 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         public void PointerMoved(PointerPoint pointer)
         {
-            userPointer.Position = pointer.Position;
-            seeker.LookAt(pointer.Position.ToVector2());
+            /*userPointer.Position = pointer.Position;
+            seeker.LookAt(pointer.Position.ToVector2());*/
         }
 
         public void PointerEntered()
         {
-            userPointer.IsVisible = true;
+//            userPointer.IsVisible = true;
         }
 
         public void PointerExited()
         {
-            userPointer.IsVisible = false;
+//            userPointer.IsVisible = false;
         }
 
         public bool PointerPressed(ICanvasResourceCreatorWithDpi creator, VirtualKeyModifiers keyModifiers, PointerPoint pointerPoint)
         {
-            var position = pointerPoint.Position;
+            /*var position = pointerPoint.Position;
 
-            seeker.MoveTo(position.ToVector2());
+            seeker.MoveTo(position.ToVector2());*/
 
             /*var position = pointerPoint.Position;
             var tower = new LaserTower(enemyProvider, position.ToVector2(), Colors.Yellow, 0.7d, 150.0d);
