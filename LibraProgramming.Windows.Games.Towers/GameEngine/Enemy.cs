@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using Windows.Foundation;
@@ -12,13 +10,13 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public class Enemy : StateAwareSceneNode
+    public class Enemy : StateAwareSceneNode<Enemy>
     {
         private static readonly Size HealthBarSize = new Size(18.0d, 4.0d);
 
         private readonly double healthAmount;
         private readonly float speed;
-        private readonly ICoordinatesTransformer coordinatesTransformer;
+        private readonly ICoordinatesTranslator _coordinatesTranslator;
         private readonly IPathFinder pathFinder;
         private float health;
 
@@ -34,7 +32,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             private set;
         }
 
-        public CellPosition Origin => coordinatesTransformer.GetPosition(Position);
+        public Position Origin => _coordinatesTranslator.GetPosition(Position);
 
         public Vector2 Position
         {
@@ -86,14 +84,14 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         }
 
         public Enemy(
-            CellPosition origin,
-            ICoordinatesTransformer coordinatesTransformer,
+            Position origin,
+            ICoordinatesTranslator coordinatesTranslator,
             IPathFinder pathFinder,
             float health,
             float speed,
             float damage)
         {
-            this.coordinatesTransformer = coordinatesTransformer;
+            this._coordinatesTranslator = coordinatesTranslator;
             this.pathFinder = pathFinder;
             this.health = health;
             this.speed = speed;
@@ -102,7 +100,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             Angle = 0.0f;
             Damage = damage;
-            Position = coordinatesTransformer.GetPoint(origin);
+            Position = coordinatesTranslator.GetPoint(origin);
             State = new CalculateWaypointsState();
         }
 
@@ -177,58 +175,35 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class CalculateWaypointsState : SceneNodeState
+        private class CalculateWaypointsState : SceneNodeState<Enemy>
         {
-            private Enemy enemy;
-
-            public override void Leave(ISceneNode node)
-            {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy) node;
-            }
-
             public override void Update(TimeSpan elapsed)
             {
-                var origin = enemy.Origin;
-                var waypoints = enemy.pathFinder.GetWaypoints(origin);
+                var origin = Node.Origin;
+                var waypoints = Node.pathFinder.GetWaypoints(origin);
 
-                enemy.State = new FindNextPositionState(waypoints, 0);
+                Node.State = new FindNextPositionState(waypoints, 0);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private class FindNextPositionState : SceneNodeState
+        private class FindNextPositionState : SceneNodeState<Enemy>
         {
-            private readonly CellPosition[] waypoints;
+            private readonly IReadOnlyCollection<Position> waypoints;
             private readonly int index;
-            private Enemy enemy;
 
-            public FindNextPositionState(CellPosition[] waypoints, int index)
+            public FindNextPositionState(IReadOnlyCollection<Position> waypoints, int index)
             {
                 this.waypoints = waypoints;
                 this.index = index;
             }
 
-            public override void Leave(ISceneNode node)
-            {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy) node;
-            }
-
             public override void Update(TimeSpan elapsed)
             {
-                enemy.State = null == waypoints || index >= waypoints.Length
-                    ? Empty
+                Node.State = null == waypoints || index >= waypoints.Count
+                    ? NodeState.Empty<Enemy>()
                     : new MoveToPositionState(waypoints, index);
             }
         }
@@ -236,87 +211,108 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MoveToPositionState : SceneNodeState
+        private class MoveToPositionState : SceneNodeState<Enemy>
         {
-            private readonly CellPosition[] waypoints;
-            private readonly int index;
-            private Enemy enemy;
-
-            public MoveToPositionState(CellPosition[] waypoints, int index)
+            protected IReadOnlyCollection<Position> Waypoints
             {
-                this.waypoints = waypoints;
-                this.index = index;
+                get;
             }
 
-            public override void Leave(ISceneNode node)
+            protected int CurrentIndex
             {
-                enemy = null;
+                get;
             }
 
-            public override void Enter(ISceneNode node)
+            protected Position CurrePosition
             {
-                enemy = (Enemy) node;
+                get;
+                private set;
+            }
+
+            public MoveToPositionState(IReadOnlyCollection<Position> waypoints, int index)
+            {
+                Waypoints = waypoints;
+                CurrentIndex = index;
+            }
+
+            protected override void OnEnter()
+            {
+                CurrePosition = GetCurrentPosition();
             }
 
             public override void Update(TimeSpan elapsed)
             {
-                var position = waypoints[index];
-                var point = enemy.coordinatesTransformer.GetPoint(position);
-                var angle = (float) Math.Atan2(point.Y - enemy.Position.Y, point.X - enemy.Position.X);
+                var point = Node._coordinatesTranslator.GetPoint(CurrePosition);
+                var angle = (float) Math.Atan2(point.Y - Node.Position.Y, point.X - Node.Position.X);
 
-                var delta = enemy.Angle - angle;
+                var delta = Node.Angle - angle;
 
                 if (0.0d < delta || delta < 0.0d)
                 {
-                    enemy.State = new EnemyRotatingState(angle, waypoints, index);
+                    Node.State = new EnemyRotatingState(angle, Waypoints, CurrentIndex);
                 }
                 else
                 {
-                    enemy.State = new EnemyMovingState(waypoints, index);
+                    Node.State = new EnemyMovingState(Waypoints, CurrentIndex);
                 }
+            }
+
+            private Position GetCurrentPosition()
+            {
+                using (var enumerator = Waypoints.GetEnumerator())
+                {
+                    enumerator.Reset();
+
+                    for (var count = CurrentIndex; 0 <= count; count--)
+                    {
+                        if (false == enumerator.MoveNext())
+                        {
+                            break;
+                        }
+
+                        if (0 == count)
+                        {
+                            return enumerator.Current;
+                        }
+                    }
+                }
+
+                throw new Exception();
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private class EnemyRotatingState : SceneNodeState
+        private class EnemyRotatingState : SceneNodeState<Enemy>
         {
             private const float step = 0.01f;
 
             private readonly float angle;
-            private readonly CellPosition[] waypoints;
+            private readonly IReadOnlyCollection<Position> waypoints;
             private readonly int index;
             private float delta;
-            private Enemy enemy;
 
-            public EnemyRotatingState(float angle, CellPosition[] waypoints, int index)
+            public EnemyRotatingState(float angle, IReadOnlyCollection<Position> waypoints, int index)
             {
                 this.angle = angle;
                 this.waypoints = waypoints;
                 this.index = index;
             }
 
-            public override void Leave(ISceneNode node)
+            protected override void OnEnter()
             {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy) node;
-
-                var sign = Math.Sign(enemy.Angle);
+                var sign = Math.Sign(Node.Angle);
 
                 if (sign == Math.Sign(angle))
                 {
                     if (sign > 0)
                     {
-                        delta = enemy.Angle > angle ? -step : step;
+                        delta = Node.Angle > angle ? -step : step;
                     }
                     else
                     {
-                        delta = enemy.Angle < angle ? -step : step;
+                        delta = Node.Angle < angle ? -step : step;
                     }
                 }
                 else
@@ -327,22 +323,22 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             public override void Update(TimeSpan elapsed)
             {
-                if (Math.Abs(angle - enemy.Angle) <= step)
+                if (Math.Abs(angle - Node.Angle) <= step)
                 {
-                    enemy.Angle = angle;
-                    enemy.State = new EnemyMovingState(waypoints, index);
+                    Node.Angle = angle;
+                    Node.State = new EnemyMovingState(waypoints, index);
 
                     return;
                 }
 
-                var value = enemy.Angle + delta;
+                var value = Node.Angle + delta;
 
                 if (value > Math.PI)
                 {
                     value *= -1.0f;
                 }
 
-                enemy.Angle = value;
+                Node.Angle = value;
             }
         }
 
@@ -393,41 +389,25 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class EnemyMovingState : SceneNodeState
+        private class EnemyMovingState : MoveToPositionState
         {
-            private readonly CellPosition[] waypoints;
-            private readonly int index;
-            private Enemy enemy;
-
-            public EnemyMovingState(CellPosition[] waypoints, int index)
+            public EnemyMovingState(IReadOnlyCollection<Position> waypoints, int index)
+                : base(waypoints, index)
             {
-                this.waypoints = waypoints;
-                this.index = index;
-            }
-
-            public override void Leave(ISceneNode node)
-            {
-                enemy = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                enemy = (Enemy) node;
             }
 
             public override void Update(TimeSpan elapsed)
             {
-                var position = waypoints[index];
-                var destination = enemy.coordinatesTransformer.GetPoint(position);
+                var destination = Node._coordinatesTranslator.GetPoint(CurrePosition);
 
-                if (1.0f >= Vector2.Distance(enemy.Position, destination))
+                if (1.0f >= Vector2.Distance(Node.Position, destination))
                 {
-                    enemy.State = new FindNextPositionState(waypoints, index + 1);
+                    Node.State = new FindNextPositionState(Waypoints, CurrentIndex + 1);
                 }
                 else
                 {
-                    var direction = new Point(Math.Cos(enemy.Angle), Math.Sin(enemy.Angle));
-                    enemy.Position += direction.ToVector2() * enemy.speed;
+                    var direction = new Point(Math.Cos(Node.Angle), Math.Sin(Node.Angle));
+                    Node.Position += direction.ToVector2() * Node.speed;
                 }
             }
         }

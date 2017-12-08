@@ -10,8 +10,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="node"></param>
-        void Leave(ISceneNode node);
+        void Leave();
 
         /// <summary>
         /// 

@@ -2,7 +2,7 @@
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public struct CellPosition : IEquatable<CellPosition>
+    public struct Position : IEquatable<Position>
     {
         public int Column
         {
@@ -14,13 +14,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get;
         }
 
-        public CellPosition(int column, int row)
+        public Position(int column, int row)
         {
             Column = column;
             Row = row;
         }
 
-        public bool Equals(CellPosition other)
+        public bool Equals(Position other)
         {
             return Column == other.Column && Row == other.Row;
         }
@@ -32,7 +32,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 return false;
             }
 
-            return obj is CellPosition position && Equals(position);
+            return obj is Position position && Equals(position);
         }
 
         public override int GetHashCode()
@@ -43,12 +43,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
 
-        public static bool operator ==(CellPosition left, CellPosition right)
+        public static bool operator ==(Position left, Position right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(CellPosition left, CellPosition right)
+        public static bool operator !=(Position left, Position right)
         {
             return false == left.Equals(right);
         }

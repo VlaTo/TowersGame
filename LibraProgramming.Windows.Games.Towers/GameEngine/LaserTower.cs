@@ -9,7 +9,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public class LaserTower : StateAwareSceneNode
+    public class LaserTower : StateAwareSceneNode<LaserTower>
     {
         private readonly IEnemyProvider enemyProvider;
         private readonly double damage;
@@ -71,34 +71,22 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class EnemySeekState : SceneNodeState
+        private class EnemySeekState : SceneNodeState<LaserTower>
         {
-            private LaserTower tower;
-
-            public override void Leave(ISceneNode node)
-            {
-                tower = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                tower = (LaserTower) node;
-            }
-
             public override void Update(TimeSpan elapsed)
             {
-                var enemies = tower.enemyProvider.GetEnemies();
+                var enemies = Node.enemyProvider.GetEnemies();
 
                 foreach (var enemy in enemies.Where(entity => entity.IsAlive))
                 {
-                    var distance = Vector2.Distance(tower.Position, enemy.Position);
+                    var distance = Vector2.Distance(Node.Position, enemy.Position);
 
-                    if (distance > tower.Distance)
+                    if (distance > Node.Distance)
                     {
                         continue;
                     }
 
-                    tower.State = new FireState(enemy, TimeSpan.FromMilliseconds(280.0d));
+                    Node.State = new FireState(enemy, TimeSpan.FromMilliseconds(280.0d));
 
                     break;
                 }
@@ -108,11 +96,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class FireState : SceneNodeState
+        private class FireState : SceneNodeState<LaserTower>
         {
             private readonly Enemy enemy;
             private TimeSpan duration;
-            private LaserTower tower;
             private LaserBeam beam;
 
             public FireState(Enemy enemy, TimeSpan duration)
@@ -121,20 +108,18 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 this.duration = duration;
             }
 
-            public override void Leave(ISceneNode node)
+            protected override void OnLeave()
             {
-                tower.Children.Remove(beam);
-                tower = null;
+                Node.Children.Remove(beam);
             }
 
-            public override void Enter(ISceneNode node)
+            protected override void OnEnter()
             {
                 beam = new LaserBeam(enemy, Colors.Red);
 
-                tower = (LaserTower) node;
-                tower.Children.Add(beam);
+                Node.Children.Add(beam);
 
-                beam.CreateResources(tower.Creator, CanvasCreateResourcesReason.FirstTime);
+                beam.CreateResources(Node.Creator, CanvasCreateResourcesReason.FirstTime);
             }
 
             public override void Update(TimeSpan elapsed)
@@ -147,37 +132,26 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                     if (false == enemy.IsAlive)
                     {
-                        tower.State = new EnemySeekState();
+                        Node.State = new EnemySeekState();
                     }
 
                     return;
                 }
 
-                tower.State = new FireCooldownState(TimeSpan.FromMilliseconds(500.0d));
+                Node.State = new FireCooldownState(TimeSpan.FromMilliseconds(500.0d));
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private class FireCooldownState : SceneNodeState
+        private class FireCooldownState : SceneNodeState<LaserTower>
         {
-            private LaserTower tower;
             private TimeSpan timeout;
 
             public FireCooldownState(TimeSpan timeout)
             {
                 this.timeout = timeout;
-            }
-
-            public override void Leave(ISceneNode node)
-            {
-                tower = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                tower = (LaserTower)node;
             }
 
             public override void Update(TimeSpan elapsed)
@@ -186,7 +160,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 if (TimeSpan.Zero >= timeout)
                 {
-                    tower.State = new EnemySeekState();
+                    Node.State = new EnemySeekState();
                 }
             }
         }

@@ -4,6 +4,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
     public interface IPathFinder
     {
-        CellPosition[] GetWaypoints(CellPosition position);
+        IReadOnlyCollection<Position> GetWaypoints(Position position);
     }
 }

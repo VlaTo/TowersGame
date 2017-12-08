@@ -2,37 +2,35 @@
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public abstract class SceneNodeState : ISceneNodeState
+    public abstract class SceneNodeState<TNode> : ISceneNodeState
+        where TNode : class, ISceneNode 
     {
-        public static readonly ISceneNodeState Empty;
-
-        static SceneNodeState()
+        protected TNode Node
         {
-            Empty = new EmptySceneState();
+            get;
+            private set;
         }
 
-        public abstract void Leave(ISceneNode node);
+        public void Leave()
+        {
+            OnLeave();
+            Node = null;
+        }
 
-        public abstract void Enter(ISceneNode node);
+        public void Enter(ISceneNode node)
+        {
+            Node = (TNode) node;
+            OnEnter();
+        }
 
         public abstract void Update(TimeSpan elapsed);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private class EmptySceneState : ISceneNodeState
+        protected virtual void OnLeave()
         {
-            public void Leave(ISceneNode node)
-            {
-            }
+        }
 
-            public void Enter(ISceneNode node)
-            {
-            }
-
-            public void Update(TimeSpan elapsed)
-            {
-            }
+        protected virtual void OnEnter()
+        {
         }
     }
 }

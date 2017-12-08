@@ -8,7 +8,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public class MyHomeBase : StateAwareSceneNode
+    public class MyHomeBase : StateAwareSceneNode<MyHomeBase>
     {
         private readonly Color color;
         private ICanvasBrush brush;
@@ -61,30 +61,19 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             session.DrawLine(point0.ToVector2(), point1.ToVector2(), brush, 2.0f);
         }
 
-        private void Defeat()
+        private void DoDefeat()
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private class DefeatState : SceneNodeState
+        private class DefeatState : SceneNodeState<MyHomeBase>
         {
-            private MyHomeBase homeBase;
-
-            public override void Leave(ISceneNode node)
-            {
-                homeBase = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                homeBase = (MyHomeBase) node;
-            }
-
             public override void Update(TimeSpan elapsed)
             {
-                homeBase.Defeat();
+                Node.DoDefeat();
+                Node.State = NodeState.Empty<MyHomeBase>();
             }
         }
     }

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -12,7 +8,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public class Seeker : StateAwareSceneNode
+    public class Seeker : StateAwareSceneNode<Seeker>
     {
         private readonly Color borderColor;
         private readonly Color fillColor;
@@ -77,37 +73,26 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MoveToState : SceneNodeState
+        private class MoveToState : SceneNodeState<Seeker>
         {
             private readonly Vector2 destination;
-            private Seeker seeker;
 
             public MoveToState(Vector2 destination)
             {
                 this.destination = destination;
             }
 
-            public override void Leave(ISceneNode node)
-            {
-                seeker = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                seeker = (Seeker) node;
-            }
-
             public override void Update(TimeSpan elapsed)
             {
-                if (1.0f >= Vector2.Distance(seeker.Position, destination))
+                if (1.0f >= Vector2.Distance(Node.Position, destination))
                 {
-                    seeker.State = Empty;
+                    Node.State = NodeState.Empty<Seeker>();
                     return;
                 }
 
-                var direction = new Point(Math.Cos(seeker.Angle), Math.Sin(seeker.Angle));
+                var direction = new Point(Math.Cos(Node.Angle), Math.Sin(Node.Angle));
 
-                seeker.Position += direction.ToVector2() * seeker.speed;
+                Node.Position += direction.ToVector2() * Node.speed;
             }
         }
     }

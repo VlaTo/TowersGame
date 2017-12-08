@@ -117,7 +117,8 @@
     <Compile Include="Core\WeakDelegateBase.cs" />
     <Compile Include="Core\WeakEvent.cs" />
     <Compile Include="Core\WeakEventHandler.cs" />
-    <Compile Include="GameEngine\CellPosition.cs" />
+    <Compile Include="GameEngine\MapSize.cs" />
+    <Compile Include="GameEngine\Position.cs" />
     <Compile Include="GameEngine\Enemy.cs" />
     <Compile Include="GameEngine\EnemyWaveEmitter.cs" />
     <Compile Include="GameEngine\EnemyWaveFactory.cs" />
@@ -130,12 +131,13 @@
     <Compile Include="GameEngine\IScene.cs" />
     <Compile Include="GameEngine\ISceneNode.cs" />
     <Compile Include="GameEngine\ISceneNodeState.cs" />
-    <Compile Include="GameEngine\ICoordinatesTransformer.cs" />
+    <Compile Include="GameEngine\ICoordinatesTranslator.cs" />
     <Compile Include="GameEngine\LandscapeMap.cs" />
     <Compile Include="GameEngine\LaserBeam.cs" />
     <Compile Include="GameEngine\LaserTower.cs" />
     <Compile Include="GameEngine\MyHomeBase.cs" />
     <Compile Include="GameEngine\MyHomeBaseHealthIndicator.cs" />
+    <Compile Include="GameEngine\NodeState.cs" />
     <Compile Include="GameEngine\Scene.cs" />
     <Compile Include="GameEngine\SceneNode.Collection.cs" />
     <Compile Include="GameEngine\SceneNode.cs" />
@@ -153,7 +155,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -189,6 +190,9 @@
     <SDKReference Include="WindowsDesktop, Version=10.0.15063.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

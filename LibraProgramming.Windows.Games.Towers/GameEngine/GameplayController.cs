@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Input;
+using Windows.UI.Xaml.Controls;
 using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
@@ -28,7 +31,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
         {
             this.waveFactory = waveFactory;
-            game = new Game(scene);
+            game = new Game(scene)
+            {
+                MapSize = new MapSize(40, 30)
+            };
             enemyProvider = new EnemyProvider(game.Enemies);
             scene.SetController(this);
         }
@@ -93,9 +99,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(seeker);
             scene.Children.Add(userPointer);*/
 
-            var transformer = new MapCoordinatesTransformer();
-            var pathFinder = new MapPathFinder();
-            var origin = new CellPosition(3, 3);
+            var transformer = new MapCoordinatesTranslator();
+            var pathFinder = new MapPathFinder(game);
+            var origin = new Position(3, 3);
             var enemy = new Enemy(origin, transformer, pathFinder, 250.0f, 0.56f, 1.0f);
 
             scene.Children.Add(enemy);
@@ -193,7 +199,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MapCoordinatesTransformer : ICoordinatesTransformer
+        private class MapCoordinatesTranslator : ICoordinatesTranslator
         {
             private const float CellHeight = 10.0f;
             private const float CellWidth = 10.0f;
@@ -203,7 +209,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             /// </summary>
             /// <param name="position"></param>
             /// <returns></returns>
-            public Vector2 GetPoint(CellPosition position)
+            public Vector2 GetPoint(Position position)
             {
                 var point = new Vector2(CellWidth / 2.0f, CellHeight / 2.0f);
 
@@ -225,7 +231,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             /// </summary>
             /// <param name="point"></param>
             /// <returns></returns>
-            public CellPosition GetPosition(Vector2 point)
+            public Position GetPosition(Vector2 point)
             {
                 var column = (int) (point.X / CellWidth);
                 var row = (int) (point.Y / CellHeight);
@@ -240,7 +246,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                     row++;
                 }
 
-                return new CellPosition(column, row);
+                return new Position(column, row);
             }
         }
 
@@ -249,17 +255,123 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// </summary>
         private class MapPathFinder : IPathFinder
         {
-            public CellPosition[] GetWaypoints(CellPosition position)
+            private readonly Game game;
+            private long [,] heatMap;
+
+            public MapPathFinder(Game game)
             {
-                var waypoints = new List<CellPosition>
+                this.game = game;
+            }
+
+            public IReadOnlyCollection<Position> GetWaypoints(Position position)
+            {
+                var map = GetGameHeatMap();
+
+                TraceMap(map, position, new Position(20, 30));
+
+                var waypoints = new List<Position>
                 {
-                    new CellPosition(position.Column + 10, position.Row),
-                    new CellPosition(position.Column + 10, position.Row + 10),
-                    new CellPosition(position.Column, position.Row + 10),
-                    new CellPosition(position.Column, position.Row)
+                    new Position(position.Column + 10, position.Row),
+                    new Position(position.Column + 10, position.Row + 10),
+                    new Position(position.Column, position.Row + 10),
+                    new Position(position.Column, position.Row)
                 };
                 
                 return waypoints.ToArray();
+            }
+
+            private long[,] GetGameHeatMap()
+            {
+                if (null != heatMap)
+                {
+                    return heatMap;
+                }
+
+                var size = game.MapSize;
+
+                heatMap = new long[size.Rows, size.Columns];
+
+                for (var row = 0; row < size.Rows; row++)
+                {
+                    for (var column = 0; column < size.Columns; column++)
+                    {
+                        heatMap[row, column] = size.Columns * row + column + 1;
+                    }
+                }
+                
+                return heatMap;
+            }
+
+            private static void TraceMap(long[,] map, Position origin, Position target)
+            {
+                var queue = new Queue<Position>();
+                var number = 0L;
+
+                queue.Enqueue(origin);
+
+                //var rows = map.GetLength(0);
+                var columns = map.GetLength(1);
+
+                var getRow = new Func<int, int>(index => index / columns);
+                var getColumn = new Func<int, int>(index => index % columns);
+
+                while (0 < queue.Count)
+                {
+                    var neighbors = GeNeighbors(map, queue.Dequeue());
+
+                    for (var index = 0; index < neighbors.Length; index++)
+                    {
+                        if (0 >= neighbors[index])
+                        {
+                            continue;
+                        }
+
+                        var position = new Position(getRow(index), getColumn(index));
+
+                        map[position.Row, position.Column] = number;
+
+                        if (target == position)
+                        {
+                            return;
+                        }
+
+                        queue.Enqueue(position);
+                    }
+
+                    number++;
+                }
+            }
+
+            private static long[] GeNeighbors(long[,] map, Position position)
+            {
+                var neighbors = new long[8];
+
+                neighbors[0] = GetNeighbor(map, position.Row - 1, position.Column);
+                neighbors[1] = GetNeighbor(map, position.Row - 1, position.Column + 1);
+                neighbors[2] = GetNeighbor(map, position.Row, position.Column + 1);
+                neighbors[3] = GetNeighbor(map, position.Row + 1, position.Column + 1);
+                neighbors[4] = GetNeighbor(map, position.Row + 1, position.Column);
+                neighbors[5] = GetNeighbor(map, position.Row + 1, position.Column - 1);
+                neighbors[6] = GetNeighbor(map, position.Row, position.Column - 1);
+                neighbors[7] = GetNeighbor(map, position.Row - 1, position.Column - 1);
+
+                return neighbors;
+            }
+
+            private static long GetNeighbor(long[,] map, int row, int column)
+            {
+                var rows = map.GetLength(0);
+                var columns = map.GetLength(1);
+
+                if (0 <= column && column < columns)
+                {
+                    if (0 <= row && row < rows)
+                    {
+                        return map[row, column];
+                    }
+                }
+
+                return -1;
             }
         }
     }

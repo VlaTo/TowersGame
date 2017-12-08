@@ -29,7 +29,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// <summary>
     /// 
     /// </summary>
-    public class EnemyWaveEmitter : StateAwareSceneNode
+    public class EnemyWaveEmitter : StateAwareSceneNode<EnemyWaveEmitter>
     {
         private readonly EnemyWaveFactory factory;
         private readonly WeakEventHandler<EnemyEventArgs> enemyReachedEnd;
@@ -144,10 +144,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class StartupTimeoutState : SceneNodeState
+        private class StartupTimeoutState : SceneNodeState<EnemyWaveEmitter>
         {
             private readonly TimeSpan timeout;
-            private EnemyWaveEmitter emitter;
             private TimeSpan current;
 
             public StartupTimeoutState(TimeSpan timeout)
@@ -155,15 +154,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 this.timeout = timeout;
             }
 
-            public override void Leave(ISceneNode node)
-            {
-                emitter = null;
-            }
-
-            public override void Enter(ISceneNode node)
+            protected override void OnEnter()
             {
                 current = TimeSpan.Zero;
-                emitter = (EnemyWaveEmitter) node;
             }
 
             public override void Update(TimeSpan elapsed)
@@ -172,7 +165,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 if (current >= timeout)
                 {
-                    emitter.State = new EmitWaveState(1, 5);
+                    Node.State = new EmitWaveState(1, 5);
                 }
             }
         }
@@ -180,12 +173,11 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class EmitWaveState : SceneNodeState
+        private class EmitWaveState : SceneNodeState<EnemyWaveEmitter>
         {
             private static readonly TimeSpan NextNpcCooldown = TimeSpan.FromSeconds(1.4d);
 
             private readonly int number;
-            private EnemyWaveEmitter emitter;
             private TimeSpan cooldown;
             private int npcs;
 
@@ -195,15 +187,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 this.npcs = npcs;
             }
 
-            public override void Leave(ISceneNode node)
-            {
-                emitter = null;
-            }
-
-            public override void Enter(ISceneNode node)
+            protected override void OnEnter()
             {
                 cooldown = TimeSpan.Zero;
-                emitter = (EnemyWaveEmitter) node;
             }
 
             public override void Update(TimeSpan elapsed)
@@ -217,12 +203,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                     }
 
                     npcs--;
-                    emitter.CreateEnemy(number);
+                    Node.CreateEnemy(number);
                     cooldown = NextNpcCooldown;
                 }
                 else
                 {
-                    emitter.State = new WaveIntermediateTimeoutState(TimeSpan.FromSeconds(15.0d), number);
+                    Node.State = new WaveIntermediateTimeoutState(TimeSpan.FromSeconds(15.0d), number);
                 }
             }
         }
@@ -230,11 +216,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class WaveIntermediateTimeoutState : SceneNodeState
+        private class WaveIntermediateTimeoutState : SceneNodeState<EnemyWaveEmitter>
         {
             private readonly TimeSpan timeout;
             private readonly int waveNumber;
-            private EnemyWaveEmitter emitter;
             private TimeSpan current;
 
             public WaveIntermediateTimeoutState(TimeSpan timeout, int waveNumber)
@@ -243,14 +228,8 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 this.waveNumber = waveNumber;
             }
 
-            public override void Leave(ISceneNode node)
+            protected override void OnEnter()
             {
-                emitter = null;
-            }
-
-            public override void Enter(ISceneNode node)
-            {
-                emitter = (EnemyWaveEmitter) node;
                 current = TimeSpan.Zero;
             }
 
@@ -265,7 +244,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 var number = waveNumber + 1;
 
-                emitter.State = number >= 10 ? Empty : new EmitWaveState(number, 5);
+                Node.State = number >= 10 ? NodeState.Empty<EnemyWaveEmitter>() : new EmitWaveState(number, 5);
             }
         }
     }

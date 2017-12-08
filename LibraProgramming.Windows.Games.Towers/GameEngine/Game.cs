@@ -24,6 +24,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get;
         }
 
+        public MapSize MapSize
+        {
+            get;
+            set;
+        }
+
         public IList<Enemy> Enemies
         {
             get;

@@ -2,7 +2,8 @@
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public class StateAwareSceneNode : SceneNode
+    public class StateAwareSceneNode<TNode> : SceneNode
+        where TNode : class, ISceneNode
     {
         private ISceneNodeState state;
 
@@ -11,21 +12,31 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get => state;
             set
             {
-                state?.Leave(this);
+                DoLeaveState();
                 state = value;
-                state?.Enter(this);
+                DoEnterState();
             }
         }
 
         protected StateAwareSceneNode()
         {
-            State = SceneNodeState.Empty;
+            State = NodeState.Empty<TNode>();
         }
 
         public override void Update(TimeSpan elapsed)
         {
             state?.Update(elapsed);
             base.Update(elapsed);
+        }
+
+        protected virtual void DoEnterState()
+        {
+            state?.Enter(this);
+        }
+
+        protected virtual void DoLeaveState()
+        {
+            state?.Leave();
         }
     }
 }
