@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI;
@@ -33,7 +35,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.waveFactory = waveFactory;
             game = new Game(scene)
             {
-                MapSize = new MapSize(40, 30)
+                MapSize = new MapSize(60, 60)
             };
             enemyProvider = new EnemyProvider(game.Enemies);
             scene.SetController(this);
@@ -266,16 +268,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             public IReadOnlyCollection<Position> GetWaypoints(Position position)
             {
                 var map = GetGameHeatMap();
+                var destination = new Position(42, 59);
 
-                TraceMap(map, position, new Position(20, 30));
+                EmitWaveTo(map, position, destination);
 
-                var waypoints = new List<Position>
-                {
-                    new Position(position.Column + 10, position.Row),
-                    new Position(position.Column + 10, position.Row + 10),
-                    new Position(position.Column, position.Row + 10),
-                    new Position(position.Column, position.Row)
-                };
+                var waypoints = TraceBackFrom(map, destination, position);
+
+                waypoints = OptimizeWaypoints(waypoints);
                 
                 return waypoints.ToArray();
             }
@@ -291,44 +290,44 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 heatMap = new long[size.Rows, size.Columns];
 
-                for (var row = 0; row < size.Rows; row++)
+                /*for (var row = 0; row < size.Rows; row++)
                 {
                     for (var column = 0; column < size.Columns; column++)
                     {
-                        heatMap[row, column] = size.Columns * row + column + 1;
+                        heatMap[row, column] = 0;
                     }
-                }
+                }*/
                 
                 return heatMap;
             }
 
-            private static void TraceMap(long[,] map, Position origin, Position target)
+            private static void EmitWaveTo(long[,] map, Position origin, Position target)
             {
                 var queue = new Queue<Position>();
-                var number = 0L;
 
                 queue.Enqueue(origin);
 
-                //var rows = map.GetLength(0);
-                var columns = map.GetLength(1);
-
-                var getRow = new Func<int, int>(index => index / columns);
-                var getColumn = new Func<int, int>(index => index % columns);
-
                 while (0 < queue.Count)
                 {
-                    var neighbors = GeNeighbors(map, queue.Dequeue());
+                    var location = queue.Dequeue();
+                    var step = map[location.Row, location.Column] + 1;
+                    var neighbors = GetNeighbors(map, location);
 
                     for (var index = 0; index < neighbors.Length; index++)
                     {
-                        if (0 >= neighbors[index])
+                        if (0 > neighbors[index])
                         {
                             continue;
                         }
 
-                        var position = new Position(getRow(index), getColumn(index));
+                        var position = location + new Position(GetColumnFromIndex(index), GetRowFromIndex(index));
 
-                        map[position.Row, position.Column] = number;
+                        if (0 < map[position.Row, position.Column])
+                        {
+                            continue;
+                        }
+
+                        map[position.Row, position.Column] = step;
 
                         if (target == position)
                         {
@@ -337,23 +336,113 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                         queue.Enqueue(position);
                     }
-
-                    number++;
                 }
             }
 
-            private static long[] GeNeighbors(long[,] map, Position position)
+            private static List<Position> TraceBackFrom(long[,] map, Position origin, Position destination)
             {
-                var neighbors = new long[8];
+                var queue = new Stack<Position>();
+                var step = map[origin.Row, origin.Column];
+                var position = origin;
+
+                while (destination != position)
+                {
+                    var neighbors = GetNeighbors(map, position);
+
+                    for (var index = 0; index < neighbors.Length; index++)
+                    {
+                        var target = position + new Position(GetColumnFromIndex(index), GetRowFromIndex(index));
+
+                        if (destination == target)
+                        {
+                            position = target;
+                            break;
+                        }
+
+                        if (step - neighbors[index] != 1)
+                        {
+                            continue;
+                        }
+
+                        position = target;
+
+                        step = map[position.Row, position.Column];
+                        queue.Push(position);
+
+                        break;
+                    }
+                }
+                
+                return queue.ToList();
+            }
+
+            private static List<Position> OptimizeWaypoints(List<Position> waypoints)
+            {
+                return waypoints;
+            }
+
+            private static int GetColumnFromIndex(int index)
+            {
+                switch (index)
+                {
+                    case 0:
+                    case 2:
+                    {
+                        return 0;
+                    }
+
+                    case 1:
+                    {
+                        return 1;
+                    }
+
+                    case 3:
+                    {
+                        return -1;
+                    }
+
+                    default:
+                    {
+                        throw new Exception();
+                    }
+                }
+            }
+
+            private static int GetRowFromIndex(int index)
+            {
+                switch (index)
+                {
+                    case 0:
+                    {
+                        return -1;
+                    }
+
+                    case 1:
+                    case 3:
+                    {
+                        return 0;
+                    }
+
+                    case 2:
+                    {
+                        return 1;
+                    }
+
+                    default:
+                    {
+                        throw new Exception();
+                    }
+                }
+            }
+
+            private static long[] GetNeighbors(long[,] map, Position position)
+            {
+                var neighbors = new long[4];
 
                 neighbors[0] = GetNeighbor(map, position.Row - 1, position.Column);
-                neighbors[1] = GetNeighbor(map, position.Row - 1, position.Column + 1);
-                neighbors[2] = GetNeighbor(map, position.Row, position.Column + 1);
-                neighbors[3] = GetNeighbor(map, position.Row + 1, position.Column + 1);
-                neighbors[4] = GetNeighbor(map, position.Row + 1, position.Column);
-                neighbors[5] = GetNeighbor(map, position.Row + 1, position.Column - 1);
-                neighbors[6] = GetNeighbor(map, position.Row, position.Column - 1);
-                neighbors[7] = GetNeighbor(map, position.Row - 1, position.Column - 1);
+                neighbors[1] = GetNeighbor(map, position.Row, position.Column + 1);
+                neighbors[2] = GetNeighbor(map, position.Row + 1, position.Column);
+                neighbors[3] = GetNeighbor(map, position.Row, position.Column - 1);
 
                 return neighbors;
             }

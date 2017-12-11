@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+    [DebuggerDisplay("Column = {Column}, Row = {Row}")]
     public struct Position : IEquatable<Position>
     {
         public int Column
@@ -43,6 +45,16 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
 
+        public static Position Add(Position first, Position second)
+        {
+            return new Position(first.Column + second.Column, first.Row + second.Row);
+        }
+
+        public static Position Subtract(Position first, Position second)
+        {
+            return new Position(first.Column - second.Column, first.Row - second.Row);
+        }
+
         public static bool operator ==(Position left, Position right)
         {
             return left.Equals(right);
@@ -51,6 +63,16 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         public static bool operator !=(Position left, Position right)
         {
             return false == left.Equals(right);
+        }
+
+        public static Position operator +(Position first, Position second)
+        {
+            return Add(first, second);
+        }
+
+        public static Position operator -(Position first, Position second)
+        {
+            return Subtract(first, second);
         }
     }
 }
