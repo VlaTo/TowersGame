@@ -378,7 +378,40 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             private static List<Position> OptimizeWaypoints(List<Position> waypoints)
             {
-                return waypoints;
+                var path = new List<Position>();
+
+                if (null == waypoints || 0 == waypoints.Count)
+                {
+                    return waypoints;
+                }
+
+                Position? delta = null;
+
+                foreach (var waypoint in waypoints)
+                {
+                    if (false == delta.HasValue)
+                    {
+                        path.Add(waypoint);
+                        delta = new Position();
+
+                        continue;
+                    }
+
+                    var index = path.Count - 1;
+                    var direction = waypoint - path[index];
+
+                    if (delta == direction)
+                    {
+                        path[index] = path[index] + direction;
+
+                        continue;
+                    }
+
+                    path.Add(waypoint);
+                    delta = direction;
+                }
+
+                return path;
             }
 
             private static int GetColumnFromIndex(int index)
