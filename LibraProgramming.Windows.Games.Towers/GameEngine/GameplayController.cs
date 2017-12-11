@@ -101,11 +101,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(seeker);
             scene.Children.Add(userPointer);*/
 
-            var transformer = new MapCoordinatesTranslator();
-            var pathFinder = new MapPathFinder(game);
-            var origin = new Position(3, 3);
-            var enemy = new Enemy(origin, transformer, pathFinder, 250.0f, 0.56f, 1.0f);
+            var transformer = new GameCoordinatesSystem();
+            var pathFinder = new AStarPathFinder(game);
+            var enemy = new Enemy(new Position(0, 3), transformer, pathFinder, 250.0f, 0.56f, 1.0f);
+            var background = new MapBackground(spritesheetPath: new Uri("ms-appx:///Assets/Terrains.png"));
 
+            scene.Children.Add(background);
             scene.Children.Add(enemy);
 
             return scene;
@@ -201,7 +202,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MapCoordinatesTranslator : ICoordinatesTranslator
+        private class GameCoordinatesSystem : ICoordinatesSystem
         {
             private const float CellHeight = 10.0f;
             private const float CellWidth = 10.0f;
@@ -255,12 +256,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class MapPathFinder : IPathFinder
+        private class AStarPathFinder : IPathFinder
         {
             private readonly Game game;
             private long [,] heatMap;
 
-            public MapPathFinder(Game game)
+            public AStarPathFinder(Game game)
             {
                 this.game = game;
             }
@@ -378,13 +379,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             private static List<Position> OptimizeWaypoints(List<Position> waypoints)
             {
-                var path = new List<Position>();
-
-                if (null == waypoints || 0 == waypoints.Count)
+                if (null == waypoints)
                 {
-                    return waypoints;
+                    return new List<Position>();
                 }
 
+                var path = new List<Position>();
                 Position? delta = null;
 
                 foreach (var waypoint in waypoints)

@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI;
 using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
 using Microsoft.Graphics.Canvas;
@@ -23,10 +24,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.floor = floor;
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             borderBrush = new CanvasSolidColorBrush(creator, border);
             floorBrush = new CanvasSolidColorBrush(creator, floor);
+
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)

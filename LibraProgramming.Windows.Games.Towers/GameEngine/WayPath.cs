@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -23,10 +24,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.vertexColor = vertexColor;
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             edgeBrush = new CanvasSolidColorBrush(creator, edgeColor);
             vertexBrush = new CanvasSolidColorBrush(creator, vertexColor);
+
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)

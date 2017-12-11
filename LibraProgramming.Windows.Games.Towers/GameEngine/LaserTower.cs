@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -46,10 +47,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             State = new EnemySeekState();
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             Creator = creator;
             drawBrush = new CanvasSolidColorBrush(creator, Color);
+
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)
@@ -119,7 +122,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                 Node.Children.Add(beam);
 
-                beam.CreateResources(Node.Creator, CanvasCreateResourcesReason.FirstTime);
+                //beam.CreateResources(Node.Creator, CanvasCreateResourcesReason.FirstTime);
             }
 
             public override void Update(TimeSpan elapsed)

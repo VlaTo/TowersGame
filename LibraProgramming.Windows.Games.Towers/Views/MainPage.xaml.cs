@@ -1,4 +1,5 @@
-﻿using Windows.Foundation;
+﻿using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
@@ -24,7 +25,7 @@ namespace LibraProgramming.Windows.Games.Towers.Views
         private void OnCanvasCreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
         {
             var scene = controller.ConfigureScene(new Size(sender.Width, sender.Height));
-            scene.CreateResources(sender, args.Reason);
+            args.TrackAsyncAction(scene.CreateResourcesAsync(sender, args.Reason).AsAsyncAction());
         }
 
         private void OnCanvasDraw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)

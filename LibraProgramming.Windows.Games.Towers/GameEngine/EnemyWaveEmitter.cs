@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using LibraProgramming.Windows.Games.Towers.Core;
@@ -82,12 +83,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             Waypoints = waypoints;
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             brush = new CanvasSolidColorBrush(creator, color);
             State = new StartupTimeoutState(TimeSpan.FromSeconds(1.0d));
             Creator = creator;
-            base.CreateResources(creator, reason);
+
+            return base.CreateResourcesAsync(creator, reason);
         }
 
         public override void Draw(CanvasDrawingSession session)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -48,10 +49,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             Angle = Math.Atan2(target.Y - Position.Y, target.X - Position.X);
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             borderBrush = new CanvasSolidColorBrush(creator, borderColor);
             fillBrush = new CanvasSolidColorBrush(creator, fillColor);
+
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)

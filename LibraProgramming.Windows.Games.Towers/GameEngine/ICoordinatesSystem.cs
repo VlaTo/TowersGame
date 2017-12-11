@@ -2,7 +2,7 @@
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
-    public interface ICoordinatesTranslator
+    public interface ICoordinatesSystem
     {
         Vector2 GetPoint(Position position);
 

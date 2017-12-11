@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -16,7 +17,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         private readonly double healthAmount;
         private readonly float speed;
-        private readonly ICoordinatesTranslator _coordinatesTranslator;
+        private readonly ICoordinatesSystem _coordinatesSystem;
         private readonly IPathFinder pathFinder;
         private float health;
 
@@ -32,7 +33,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             private set;
         }
 
-        public Position Origin => _coordinatesTranslator.GetPosition(Position);
+        public Position Origin => _coordinatesSystem.GetPosition(Position);
 
         public Vector2 Position
         {
@@ -85,13 +86,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         public Enemy(
             Position origin,
-            ICoordinatesTranslator coordinatesTranslator,
+            ICoordinatesSystem coordinatesSystem,
             IPathFinder pathFinder,
             float health,
             float speed,
             float damage)
         {
-            this._coordinatesTranslator = coordinatesTranslator;
+            this._coordinatesSystem = coordinatesSystem;
             this.pathFinder = pathFinder;
             this.health = health;
             this.speed = speed;
@@ -100,7 +101,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             Angle = 0.0f;
             Damage = damage;
-            Position = coordinatesTranslator.GetPoint(origin);
+            Position = coordinatesSystem.GetPoint(origin);
             State = new CalculateWaypointsState();
         }
 
@@ -138,13 +139,15 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }*/
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             DrawBrush = new CanvasSolidColorBrush(creator, Colors.White);
             FillBrush = new CanvasSolidColorBrush(creator, Colors.Gray);
             HealthBarBrush = new CanvasSolidColorBrush(creator, Colors.Chartreuse);
             GoodHealthBrush = new CanvasSolidColorBrush(creator, Colors.Chartreuse);
             PoorHealthBrush = new CanvasSolidColorBrush(creator, Colors.OrangeRed);
+
+            return Task.CompletedTask;
         }
 
         /*public void ReportDamage()
@@ -242,7 +245,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             public override void Update(TimeSpan elapsed)
             {
-                var point = Node._coordinatesTranslator.GetPoint(CurrePosition);
+                var point = Node._coordinatesSystem.GetPoint(CurrePosition);
                 var angle = (float) Math.Atan2(point.Y - Node.Position.Y, point.X - Node.Position.X);
 
                 var delta = Node.Angle - angle;
@@ -398,7 +401,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
             public override void Update(TimeSpan elapsed)
             {
-                var destination = Node._coordinatesTranslator.GetPoint(CurrePosition);
+                var destination = Node._coordinatesSystem.GetPoint(CurrePosition);
 
                 if (1.0f >= Vector2.Distance(Node.Position, destination))
                 {

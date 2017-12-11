@@ -1,4 +1,5 @@
-﻿using Windows.UI;
+﻿using System.Threading.Tasks;
+using Windows.UI;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI;
@@ -17,9 +18,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.color = color;
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             drawBrush = new CanvasSolidColorBrush(creator, color);
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)

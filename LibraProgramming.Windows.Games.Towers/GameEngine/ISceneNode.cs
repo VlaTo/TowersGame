@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 
@@ -23,7 +24,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get;
         }
 
-        void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason);
+        Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason);
 
         void Draw(CanvasDrawingSession session);
 

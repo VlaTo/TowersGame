@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 
@@ -47,6 +48,18 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             Children = new SceneNodeCollection(this);
         }
 
+        public virtual Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        {
+            var tasks = new List<Task>();
+
+            foreach (ISceneNode child in Children)
+            {
+                tasks.Add(child.CreateResourcesAsync(creator, reason));
+            }
+
+            return Task.WhenAll(tasks);
+        }
+
         public virtual void Draw(CanvasDrawingSession session)
         {
             foreach (ISceneNode child in Children)
@@ -60,14 +73,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             foreach (ISceneNode child in Children)
             {
                 child.Update(elapsed);
-            }
-        }
-
-        public virtual void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
-        {
-            foreach (ISceneNode child in Children)
-            {
-                child.CreateResources(creator, reason);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -27,11 +28,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             this.warningColor = warningColor;
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             borderBrush = new CanvasSolidColorBrush(creator, borderColor);
             fillBrush = new CanvasSolidColorBrush(creator, fillColor);
             warningBrush = new CanvasSolidColorBrush(creator, warningColor);
+
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)

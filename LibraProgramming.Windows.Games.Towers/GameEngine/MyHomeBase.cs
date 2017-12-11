@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Microsoft.Graphics.Canvas;
@@ -49,9 +50,10 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             State = new DefeatState();
         }
 
-        public override void CreateResources(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             brush = new CanvasSolidColorBrush(creator, color);
+            return Task.CompletedTask;
         }
 
         public override void Draw(CanvasDrawingSession session)
