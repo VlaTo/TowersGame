@@ -194,6 +194,7 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\GameAssets.pdn" />
     <None Include="LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
