@@ -25,7 +25,7 @@ namespace LibraProgramming.Windows.Games.Towers.Views
         private void OnCanvasCreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
         {
             var scene = controller.ConfigureScene(new Size(sender.Width, sender.Height));
-            args.TrackAsyncAction(scene.CreateResourcesAsync(sender, args.Reason).AsAsyncAction());
+            args.TrackAsyncAction(scene.CreateResourcesAsync(sender));
         }
 
         private void OnCanvasDraw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)

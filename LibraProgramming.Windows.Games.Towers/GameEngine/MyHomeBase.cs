@@ -9,6 +9,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public class MyHomeBase : StateAwareSceneNode<MyHomeBase>
     {
         private readonly Color color;
@@ -79,4 +80,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
     }
+*/
 }

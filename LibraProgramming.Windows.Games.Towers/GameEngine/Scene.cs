@@ -1,4 +1,7 @@
-﻿using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
+﻿using System;
+using Windows.Foundation;
+using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
+using Microsoft.Graphics.Canvas;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
@@ -7,21 +10,29 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// </summary>
     public class Scene : SceneNode, IScene
     {
-        private GameplayController controller;
-
-        public override GameplayController Controller => controller;
+        public ResourcesLoader Resources
+        {
+            get;
+        }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="resourcesLoader"></param>
         [PrefferedConstructor]
-        public Scene()
+        public Scene(ResourcesLoader resourcesLoader)
         {
+            Resources = resourcesLoader;
         }
 
-        public void SetController(GameplayController value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creator"></param>
+        /// <returns></returns>
+        public IAsyncAction CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator)
         {
-            controller = value;
+            return Resources.CreateAsync(creator).AsAsyncAction();
         }
 
         /// <summary>

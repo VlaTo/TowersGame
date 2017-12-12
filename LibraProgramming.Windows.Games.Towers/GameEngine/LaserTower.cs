@@ -10,6 +10,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public class LaserTower : StateAwareSceneNode<LaserTower>
     {
         private readonly IEnemyProvider enemyProvider;
@@ -168,4 +169,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
     }
+*/
 }

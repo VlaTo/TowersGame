@@ -21,19 +21,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             backgroundColor = Colors.CadetBlue;
         }
 
-        public override async Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
-        {
-            backgroundBrush = new CanvasSolidColorBrush(creator, backgroundColor);
-
-            if (null != spritesheetPath)
-            {
-                bitmapBrush = await CanvasBitmap.LoadAsync(creator, spritesheetPath);
-//                spritesheetBrush = new CanvasImageBrush(creator, image);
-            }
-
-            await base.CreateResourcesAsync(creator, reason);
-        }
-
         public override void Draw(CanvasDrawingSession session)
         {
             var size = new Size(50.0d, 50.0d);
