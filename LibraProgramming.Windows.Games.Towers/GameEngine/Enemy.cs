@@ -14,7 +14,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     {
         private static readonly Size HealthBarSize = new Size(18.0d, 4.0d);
 
-        private readonly IResourceProvider<ICanvasBrush> brushes;
         private readonly ICoordinatesSystem coordinates;
         private readonly IPathFinder pathFinder;
         private readonly double healthAmount;
@@ -54,33 +53,8 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
         public bool IsAlive => 0.0d < Health;
 
-        protected ICanvasBrush DrawBrush
-        {
-            get => brushes["white"];
-        }
-
-        protected ICanvasBrush FillBrush
-        {
-            get => brushes["grey"];
-        }
-
-        protected ICanvasBrush HealthBarBrush
-        {
-            get => brushes["white"];
-        }
-
-        protected ICanvasBrush HealthBrush
-        {
-            get => brushes["green"];
-        }
-
-        protected ICanvasBrush HealthLowBrush
-        {
-            get => brushes["red"];
-        }
 
         public Enemy(
-            IResourceProvider<ICanvasBrush> brushes,
             ICoordinatesSystem coordinates,
             Position origin,
             IPathFinder pathFinder,
@@ -88,7 +62,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             float speed,
             float damage)
         {
-            this.brushes = brushes;
             this.coordinates = coordinates;
             this.pathFinder = pathFinder;
             this.health = health;
@@ -119,9 +92,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             var direction = new Point(Math.Cos(Angle), Math.Sin(Angle));
             var end = Position + direction.ToVector2() * 11.0f;
 
-            session.DrawCircle(Position, 8.0f, DrawBrush);
-            session.FillCircle(Position, 8.0f, FillBrush);
-            session.DrawLine(Position, end, DrawBrush);
+            //session.DrawCircle(Position, 8.0f, DrawBrush);
+            //session.FillCircle(Position, 8.0f, FillBrush);
+            //session.DrawLine(Position, end, DrawBrush);
 
             DrawHealthBar(session);
         }
@@ -154,11 +127,11 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             var width = HealthBarSize.Width * percentage;
             var point0 = new Point(Position.X - HealthBarSize.Width / 2.0d, Position.Y + 12.0d);
 
-            session.DrawRectangle(new Rect(point0, HealthBarSize), HealthBarBrush);
-            session.FillRectangle(
+            //session.DrawRectangle(new Rect(point0, HealthBarSize), HealthBarBrush);
+            /*session.FillRectangle(
                 new Rect(point0, new Size(width, HealthBarSize.Height)),
                 percentage >= 0.4d ? HealthBrush : HealthLowBrush
-            );
+            );*/
         }
 
         /// <summary>

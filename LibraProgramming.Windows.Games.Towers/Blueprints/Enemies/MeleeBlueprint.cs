@@ -1,11 +1,26 @@
-﻿using LibraProgramming.Windows.Games.Engine;
+﻿using System.Numerics;
+using Windows.UI;
+using LibraProgramming.Windows.Games.Engine;
 using LibraProgramming.Windows.Games.Towers.Components;
+using LibraProgramming.Windows.Games.Towers.Components.Drawable;
 
 namespace LibraProgramming.Windows.Games.Towers.Blueprints.Enemies
 {
     public class MeleeBlueprint : IBlueprint
     {
         public float Speed
+        {
+            get;
+            set;
+        }
+
+        public Vector2 Position
+        {
+            get;
+            set;
+        }
+
+        public float Angle
         {
             get;
             set;
@@ -33,8 +48,9 @@ namespace LibraProgramming.Windows.Games.Towers.Blueprints.Enemies
         {
             entity.AddComponents(
                 new HealthComponent(Health),
-                new MoveComponent(Speed),
-                new WaveComponent(WaveNumber)
+                new MoveComponent(Position, Angle, Speed),
+                new WaveComponent(WaveNumber),
+                new DrawEnemyComponent(Colors.DarkOliveGreen)
             );
         }
     }

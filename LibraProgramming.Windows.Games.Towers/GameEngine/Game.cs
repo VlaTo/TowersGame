@@ -47,7 +47,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         public Game(IScene scene, MapSize size)
         {
             Scene = scene;
-            CoordinatesSystem = new GameCoordinatesSystem();
             Enemies = new List<Enemy>();
             MapSize = size;
             Map = CreateMap();

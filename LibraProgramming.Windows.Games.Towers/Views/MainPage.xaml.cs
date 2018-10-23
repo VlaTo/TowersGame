@@ -30,6 +30,7 @@ namespace LibraProgramming.Windows.Games.Towers.Views
         private void OnCanvasDraw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
             //controller.DrawScene(args.DrawingSession);
+            game.Draw(args.DrawingSession);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

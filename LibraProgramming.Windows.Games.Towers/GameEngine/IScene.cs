@@ -9,11 +9,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// </summary>
     public interface IScene : ISceneNode, IDisposable
     {
-        ResourcesLoader Resources
-        {
-            get;
-        }
-
         /// <summary>
         /// 
         /// </summary>

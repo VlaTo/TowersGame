@@ -24,11 +24,11 @@ namespace LibraProgramming.Windows.Games.Towers.Components
             set;
         }
 
-        public MoveComponent(float speed)
+        public MoveComponent(Vector2 position, float angle, float speed)
         {
             Speed = speed;
-            Position = new ObservableProperty<Vector2>(new Vector2());
-            Angle = new ObservableProperty<float>(0.0f);
+            Position = new ObservableProperty<Vector2>(position);
+            Angle = new ObservableProperty<float>(angle);
         }
 
         public void Dispose()

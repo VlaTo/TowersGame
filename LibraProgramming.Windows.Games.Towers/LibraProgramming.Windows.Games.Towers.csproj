@@ -98,6 +98,8 @@
     </Compile>
     <Compile Include="Bootstrap.cs" />
     <Compile Include="Blueprints\Enemies\MeleeBlueprint.cs" />
+    <Compile Include="Components\Drawable\DrawEnemyComponent.cs" />
+    <Compile Include="Components\Drawable\ISceneDrawable.cs" />
     <Compile Include="Components\GameComponent.cs" />
     <Compile Include="Components\WaveComponent.cs" />
     <Compile Include="Core\DependencyInjection\NinjectDependencyContainer.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Events\GameUpdateEvent.cs" />
     <Compile Include="Events\NewEnemyWaveEvent.cs" />
     <Compile Include="Events\NewEnemyWaveIncomingEvent.cs" />
+    <Compile Include="Events\SceneDrawEvent.cs" />
     <Compile Include="GameEngine\MapBackground.cs" />
     <Compile Include="GameEngine\MapSize.cs" />
     <Compile Include="GameEngine\Position.cs" />
@@ -130,7 +133,6 @@
     <Compile Include="GameEngine\MyHomeBase.cs" />
     <Compile Include="GameEngine\MyHomeBaseHealthIndicator.cs" />
     <Compile Include="GameEngine\NodeState.cs" />
-    <Compile Include="GameEngine\ResourcesLoader.cs" />
     <Compile Include="GameEngine\Scene.cs" />
     <Compile Include="GameEngine\SceneNode.Collection.cs" />
     <Compile Include="GameEngine\SceneNode.cs" />
@@ -150,6 +152,7 @@
     <Compile Include="Systems\DisplayHealthSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Systems\DisplayWaveWarningSystem.cs" />
+    <Compile Include="Systems\EnemyDrawSystem.cs" />
     <Compile Include="Systems\EnemyMoveSystem.cs" />
     <Compile Include="Systems\NewEnemyWaveEmitterSystem.cs" />
     <Compile Include="Systems\NewEnemyWaveWarningSystem.cs" />

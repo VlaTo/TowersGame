@@ -1,4 +1,6 @@
-﻿using LibraProgramming.Windows.Games.Engine;
+﻿using System;
+using System.Numerics;
+using LibraProgramming.Windows.Games.Engine;
 using LibraProgramming.Windows.Games.Engine.Reactive;
 using LibraProgramming.Windows.Games.Towers.Blueprints.Enemies;
 using LibraProgramming.Windows.Games.Towers.Events;
@@ -24,7 +26,9 @@ namespace LibraProgramming.Windows.Games.Towers.Systems
             collection.CreateEntity(new MeleeBlueprint
             {
                 WaveNumber = @event.WaveNumber,
-                Speed = 1.2f,
+                Position = new Vector2(20.0f, 24.0f),
+                Speed = 0.2f,
+                Angle = MathF.PI / 4.0f,
                 Health = 20.0f,
                 Damage = 12.0f
             });

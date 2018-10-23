@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Windows.Foundation;
-using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
+using Windows.UI;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 
@@ -9,15 +9,15 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     public sealed class Landscape : SceneNode
     {
         //        private readonly IResourceProvider<CanvasBitmap> bitmaps;
-        private readonly IResourceProvider<ICanvasBrush> brushes;
+        //private readonly IResourceProvider<ICanvasBrush> brushes;
         private readonly long[,] map;
         private readonly Size size;
 
-        [PrefferedConstructor]
-        public Landscape(IResourceProvider<ICanvasBrush> brushes, long[,] map, Size size)
+        //[PrefferedConstructor]
+        public Landscape(long[,] map, Size size)
         {
 //            this.bitmaps = bitmaps;
-            this.brushes = brushes;
+            //this.brushes = brushes;
             this.map = map;
             this.size = size;
         }
@@ -32,7 +32,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                 session.DrawImage(bitmap, rect);
             }*/
 
-            var brush = brushes["grey"];
+            //var brush = brushes["grey"];
             var rows = map.GetLength(0);
             var columns = map.GetLength(1);
 
@@ -53,7 +53,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 
                         var y = row * 25.0f;
 
-                        session.FillRectangle(new Rect(x, y, 25.0d, 25.0d), brush);
+                        session.FillRectangle(new Rect(x, y, 25.0d, 25.0d), Colors.Aqua);
                     }
                 }
             }

@@ -92,12 +92,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(userPointer);*/
 
             var pathFinder = new AStarPathFinder(game);
-            var enemy = new Enemy(scene.Resources, game.CoordinatesSystem, new Position(0, 1), pathFinder, 250.0f, 0.56f, 1.0f);
-            var landscape = new Landscape(scene.Resources, game.Map, size);
+            //var enemy = new Enemy(scene.Resources, game.CoordinatesSystem, new Position(0, 1), pathFinder, 250.0f, 0.56f, 1.0f);
+            //var landscape = new Landscape(scene.Resources, game.Map, size);
             
-            scene.Children.Add(landscape);
-            scene.Children.Add(new Grid(scene.Resources, new Size(25.0d, 25.0d), size));
-            scene.Children.Add(enemy);
+            //scene.Children.Add(landscape);
+            //scene.Children.Add(new Grid(scene.Resources, new Size(25.0d, 25.0d), size));
+            //scene.Children.Add(enemy);
 
             return scene;
         }

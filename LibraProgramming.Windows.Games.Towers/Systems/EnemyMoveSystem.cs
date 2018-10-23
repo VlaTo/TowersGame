@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using System.Reactive.Linq;
-using Windows.Foundation;
 using LibraProgramming.Windows.Games.Engine;
 using LibraProgramming.Windows.Games.Engine.Reactive.Extensions;
 using LibraProgramming.Windows.Games.Towers.Components;
@@ -56,7 +55,7 @@ namespace LibraProgramming.Windows.Games.Towers.Systems
 
         private static Vector2 GetDirection(float angle)
         {
-            return new Point(Math.Cos(angle), Math.Sin(angle)).ToVector2();
+            return new Vector2(MathF.Cos(angle), MathF.Sin(angle));
         }
     }
 }
