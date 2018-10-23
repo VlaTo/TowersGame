@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
-using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI;
@@ -16,7 +15,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         private ICanvasBrush borderBrush;
         private ICanvasBrush floorBrush;
 
-        [PrefferedConstructor]
         public LandscapeMap(Size size, Color border, Color floor)
         {
             this.size = size;

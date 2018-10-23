@@ -1,6 +1,4 @@
 ﻿using System;
-using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
-using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
@@ -9,11 +7,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// </summary>
     public sealed class EnemyWaveFactory
     {
-        [PrefferedConstructor]
-        public EnemyWaveFactory()
-        {
-        }
-
         public Enemy CreateEnemy(EnemyWaveEmitter emitter, int waveNumber)
         {
             throw new NotImplementedException();

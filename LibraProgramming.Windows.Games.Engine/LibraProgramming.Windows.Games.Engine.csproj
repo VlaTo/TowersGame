@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LibraProgramming.Windows.Games.Engine</RootNamespace>
+    <AssemblyName>LibraProgramming.Windows.Games.Engine</AssemblyName>
+    <DefaultLanguage>ru-RU</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <PlatformTarget>ARM</PlatformTarget>
+    <OutputPath>bin\ARM\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\PriorityAttribute.cs" />
+    <Compile Include="ComponentRepository.cs" />
+    <Compile Include="ComponentStore.cs" />
+    <Compile Include="ComponentTypeLookup.cs" />
+    <Compile Include="ComputedFromData.cs" />
+    <Compile Include="ComputedFromGroup.cs" />
+    <Compile Include="ComputedGroup.cs" />
+    <Compile Include="DefaultComponentTypeAssigner.cs" />
+    <Compile Include="DefaultEntityCollectionFactory.cs" />
+    <Compile Include="DefaultEntityFactory.cs" />
+    <Compile Include="DefaultObservableGroupFactory.cs" />
+    <Compile Include="EmptyGroup.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="EventReactionSystem.cs" />
+    <Compile Include="Events\CollectionElementChangedEvent.cs" />
+    <Compile Include="Events\CollectionEntityEvent.cs" />
+    <Compile Include="Events\ComponentsChangedEvent.cs" />
+    <Compile Include="Factory.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="GroupBuilder.cs" />
+    <Compile Include="IBlueprint.cs" />
+    <Compile Include="IBuilder.cs" />
+    <Compile Include="IComponent.cs" />
+    <Compile Include="IComponentRepository.cs" />
+    <Compile Include="IComponentStore.cs" />
+    <Compile Include="IComponentTypeAssigner.cs" />
+    <Compile Include="IComponentTypeLookup.cs" />
+    <Compile Include="IComputedGroup.cs" />
+    <Compile Include="IConventionalSystemHandler.cs" />
+    <Compile Include="IEntity.cs" />
+    <Compile Include="IEntityFactory.cs" />
+    <Compile Include="IEventSystem.cs" />
+    <Compile Include="IGroup.cs" />
+    <Compile Include="IHasPredicate.cs" />
+    <Compile Include="Infrastructure\Dependencies\BindingConfiguration.cs" />
+    <Compile Include="Infrastructure\IdPool.cs" />
+    <Compile Include="Infrastructure\IIdPool.cs" />
+    <Compile Include="ILookupGroup.cs" />
+    <Compile Include="IManualSystem.cs" />
+    <Compile Include="Infrastructure\Application.cs" />
+    <Compile Include="Infrastructure\Dependencies\BindingBuilder.cs" />
+    <Compile Include="Infrastructure\Dependencies\IDependencyContainer.cs" />
+    <Compile Include="Infrastructure\Dependencies\IDependencyModule.cs" />
+    <Compile Include="Infrastructure\EventSystem.cs" />
+    <Compile Include="Infrastructure\Extensions\ApplicationExtension.cs" />
+    <Compile Include="Infrastructure\Extensions\DependencyContainerExtension.cs" />
+    <Compile Include="Infrastructure\Extensions\DictionaryExtension.cs" />
+    <Compile Include="Infrastructure\Extensions\GroupExtension.cs" />
+    <Compile Include="Infrastructure\Extensions\ListExtension.cs" />
+    <Compile Include="Infrastructure\FrameworkModule.cs" />
+    <Compile Include="Infrastructure\IPlugin.cs" />
+    <Compile Include="Infrastructure\IPool.cs" />
+    <Compile Include="IObservableGroupFactory.cs" />
+    <Compile Include="IObservableGroupQuery.cs" />
+    <Compile Include="ISystemExecutor.cs" />
+    <Compile Include="IViewHandler.cs" />
+    <Compile Include="IViewPool.cs" />
+    <Compile Include="IViewResolverSystem.cs" />
+    <Compile Include="LookupGroup.cs" />
+    <Compile Include="ManualSystemHandler.cs" />
+    <Compile Include="ObservableGroup.cs" />
+    <Compile Include="ObservableGroupConfiguration.cs" />
+    <Compile Include="ObservableGroupToken.cs" />
+    <Compile Include="PooledViewResolverSystem.cs" />
+    <Compile Include="Reactive\Collections\IComputedCollection.cs" />
+    <Compile Include="Reactive\Collections\IReactiveCollection.cs" />
+    <Compile Include="Reactive\Collections\IReadOnlyReactiveCollection.cs" />
+    <Compile Include="Reactive\Collections\ReactiveCollection.cs" />
+    <Compile Include="Reactive\Events\CollectionAddEvent.cs" />
+    <Compile Include="Reactive\Events\CollectionElementChangedEvent.cs" />
+    <Compile Include="Reactive\Events\CollectionMoveEvent.cs" />
+    <Compile Include="Reactive\Events\CollectionRemoveEvent.cs" />
+    <Compile Include="Reactive\Events\CollectionReplaceEvent.cs" />
+    <Compile Include="Reactive\Extensions\ListExtension.cs" />
+    <Compile Include="Reactive\Extensions\SystemExtension.cs" />
+    <Compile Include="Infrastructure\IApplication.cs" />
+    <Compile Include="Infrastructure\Next.cs" />
+    <Compile Include="Infrastructure\Throw.cs" />
+    <Compile Include="IObservableGroup.cs" />
+    <Compile Include="IReactToDataSystem.cs" />
+    <Compile Include="IReactToEntitySystem.cs" />
+    <Compile Include="IReactToGroupSystem.cs" />
+    <Compile Include="ISetupSystem.cs" />
+    <Compile Include="ISystem.cs" />
+    <Compile Include="ITeardownSystem.cs" />
+    <Compile Include="Reactive\CompositeDisposable.cs" />
+    <Compile Include="Reactive\Disposable.cs" />
+    <Compile Include="Reactive\DisposedObserver.cs" />
+    <Compile Include="Reactive\EmptyDisposable.cs" />
+    <Compile Include="Reactive\EmptyObserver.cs" />
+    <Compile Include="Reactive\EntityCollection.cs" />
+    <Compile Include="Reactive\EntityCollectionManager.cs" />
+    <Compile Include="Reactive\Extensions\BlueprintExtension.cs" />
+    <Compile Include="Reactive\Extensions\DictionaryExtension.cs" />
+    <Compile Include="Reactive\Extensions\DisposeExtension.cs" />
+    <Compile Include="Reactive\Extensions\EntityCollectionExtension.cs" />
+    <Compile Include="Reactive\Extensions\EntityCollectionManagerExtension.cs" />
+    <Compile Include="Reactive\Extensions\EntityExtension.cs" />
+    <Compile Include="Reactive\Extensions\EnumerableExtension.cs" />
+    <Compile Include="Reactive\Extensions\GroupExtension.cs" />
+    <Compile Include="Reactive\Extensions\LookupGroupExtension.cs" />
+    <Compile Include="Reactive\Extensions\ObservableGroupExtension.cs" />
+    <Compile Include="Reactive\IComputed.cs" />
+    <Compile Include="Reactive\IEntityCollection.cs" />
+    <Compile Include="Reactive\IEntityCollectionFactory.cs" />
+    <Compile Include="Reactive\IEntityCollectionManager.cs" />
+    <Compile Include="Reactive\IEntityCollectionQuery.cs" />
+    <Compile Include="Reactive\IMessageBroker.cs" />
+    <Compile Include="Reactive\IMessagePublisher.cs" />
+    <Compile Include="Reactive\IMessageReceiver.cs" />
+    <Compile Include="Reactive\INotifyingEntityCollection.cs" />
+    <Compile Include="Reactive\IObservableProperty.cs" />
+    <Compile Include="Reactive\IReadOnlyObservableProperty.cs" />
+    <Compile Include="Reactive\ISubject.cs" />
+    <Compile Include="Reactive\ListObservable.cs" />
+    <Compile Include="Reactive\MessageBroker.cs" />
+    <Compile Include="Reactive\ObservableExtension.cs" />
+    <Compile Include="Reactive\ObservableProperty.cs" />
+    <Compile Include="Reactive\Subject.cs" />
+    <Compile Include="Reactive\EmptySubscribeObserver.cs" />
+    <Compile Include="Reactive\SubscribeObserver.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReactToDataSystemHandler.cs" />
+    <Compile Include="ReactToEntitySystemHandler.cs" />
+    <Compile Include="ReactToGroupSystemHandler.cs" />
+    <Compile Include="SetupSystemHandler.cs" />
+    <Compile Include="SystemExecutor.cs" />
+    <Compile Include="TeardownSystemHandler.cs" />
+    <Compile Include="ViewComponent.cs" />
+    <Compile Include="ViewResolverSystem.cs" />
+    <Compile Include="WindowsUniversalPlatformApplication.cs" />
+    <EmbeddedResource Include="Properties\LibraProgramming.Windows.Games.Engine.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>6.1.9</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>4.1.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

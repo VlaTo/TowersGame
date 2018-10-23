@@ -1,6 +1,4 @@
-﻿using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
-
-namespace LibraProgramming.Windows.Games.Towers.GameEngine
+﻿namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
     /// <summary>
     /// 
@@ -10,14 +8,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         private GameplayController controller;
 
         public override GameplayController Controller => controller;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [PrefferedConstructor]
-        public Scene()
-        {
-        }
 
         public void SetController(GameplayController value)
         {

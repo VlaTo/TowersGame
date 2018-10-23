@@ -11,14 +11,14 @@
     <AssemblyName>LibraProgramming.Windows.Games.Towers</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>4A6BECD0C6CA415507F5DA7DBD5C974190DA567D</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>98026A47F3DE8B674F9E3DD25BA91A5F437DE743</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -97,26 +97,17 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Bootstrap.cs" />
-    <Compile Include="Core\ServiceContainer\CreatorFactory.cs" />
-    <Compile Include="Core\ServiceContainer\Factory.cs" />
-    <Compile Include="Core\ServiceContainer\IInstanceProvider.cs" />
-    <Compile Include="Core\ServiceContainer\InstanceLifetime.CreateNewLifetime.cs" />
-    <Compile Include="Core\ServiceContainer\InstanceLifetime.cs" />
-    <Compile Include="Core\ServiceContainer\InstanceLifetime.SingletonLifetime.cs" />
-    <Compile Include="Core\ServiceContainer\IServiceLocator.cs" />
-    <Compile Include="Core\ServiceContainer\IServiceRegistry.cs" />
-    <Compile Include="Core\ServiceContainer\PrefferedConstructorAttribute.cs" />
-    <Compile Include="Core\ServiceContainer\ServiceAttribute.cs" />
-    <Compile Include="Core\ServiceContainer\ServiceLocator.cs" />
-    <Compile Include="Core\ServiceContainer\ServiceLocator.InstanceCollection.cs" />
-    <Compile Include="Core\ServiceContainer\ServiceLocatorException.cs" />
-    <Compile Include="Core\ServiceContainer\ServiceTypeReference.cs" />
-    <Compile Include="Core\ServiceContainer\Throw.cs" />
-    <Compile Include="Core\ServiceContainer\TypeFactory.cs" />
+    <Compile Include="Blueprints\Enemies\MeleeBlueprint.cs" />
+    <Compile Include="Components\GameComponent.cs" />
+    <Compile Include="Components\WaveComponent.cs" />
+    <Compile Include="Core\DependencyInjection\NinjectDependencyContainer.cs" />
     <Compile Include="Core\WeakDelegate.cs" />
     <Compile Include="Core\WeakDelegateBase.cs" />
     <Compile Include="Core\WeakEvent.cs" />
     <Compile Include="Core\WeakEventHandler.cs" />
+    <Compile Include="Events\GameUpdateEvent.cs" />
+    <Compile Include="Events\NewEnemyWaveEvent.cs" />
+    <Compile Include="Events\NewEnemyWaveIncomingEvent.cs" />
     <Compile Include="GameEngine\MapBackground.cs" />
     <Compile Include="GameEngine\MapSize.cs" />
     <Compile Include="GameEngine\Position.cs" />
@@ -145,9 +136,23 @@
     <Compile Include="GameEngine\SceneNodeState.cs" />
     <Compile Include="GameEngine\Seeker.cs" />
     <Compile Include="GameEngine\StateAwareSceneNode.cs" />
+    <Compile Include="GameEngine\TowersGame.cs" />
     <Compile Include="GameEngine\UserPointer.cs" />
     <Compile Include="GameEngine\WayPath.cs" />
+    <Compile Include="Components\HealthComponent.cs" />
+    <Compile Include="Components\MoveComponent.cs" />
+    <Compile Include="Events\EntityDamageEvent.cs" />
+    <Compile Include="Extensions\ObservableExtension.cs" />
+    <Compile Include="Groups\IMovingEnemiesGroup.cs" />
+    <Compile Include="Groups\MovingEnemiesGroup.cs" />
+    <Compile Include="Systems\DamageTakenSystem.cs" />
+    <Compile Include="Systems\DisplayHealthSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\DisplayWaveWarningSystem.cs" />
+    <Compile Include="Systems\EnemyMoveSystem.cs" />
+    <Compile Include="Systems\NewEnemyWaveEmitterSystem.cs" />
+    <Compile Include="Systems\NewEnemyWaveWarningSystem.cs" />
+    <Compile Include="Systems\GameUpdateSystem.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -176,10 +181,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.2</Version>
+      <Version>6.1.9</Version>
+    </PackageReference>
+    <PackageReference Include="Ninject">
+      <Version>3.3.4</Version>
     </PackageReference>
     <PackageReference Include="Win2D.uwp">
-      <Version>1.21.0</Version>
+      <Version>1.23.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -189,19 +197,28 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsDesktop, Version=10.0.15063.0">
+    <None Include="..\LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx">
+      <Link>LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx</Link>
+    </None>
+    <None Include="Assets\GameAssets.pdn" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.17134.0">
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\GameAssets.pdn" />
-    <None Include="LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx" />
+    <ProjectReference Include="..\LibraProgramming.Windows.Games.Engine\LibraProgramming.Windows.Games.Engine.csproj">
+      <Project>{a834ae47-ca07-4fa7-9c77-2bcafb12328a}</Project>
+      <Name>LibraProgramming.Windows.Games.Engine</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx</AssemblyOriginatorKeyFile>

@@ -4,7 +4,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
+using LibraProgramming.Windows.Games.Towers.Core.DependencyInjection;
 using LibraProgramming.Windows.Games.Towers.Views;
 
 namespace LibraProgramming.Windows.Games.Towers
@@ -37,7 +37,7 @@ namespace LibraProgramming.Windows.Games.Towers
             // just ensure that the window is active
             if (rootFrame == null)
             {
-                Bootstrap.Register(ServiceLocator.Current);
+                Bootstrap.Register();
 
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();

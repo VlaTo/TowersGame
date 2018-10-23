@@ -5,16 +5,26 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraProgramming.Windows.Games.Towers", "LibraProgramming.Windows.Games.Towers\LibraProgramming.Windows.Games.Towers.csproj", "{28A92EA1-0435-436E-8C5A-572BF72349B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraProgramming.Windows.Games.Engine", "LibraProgramming.Windows.Games.Engine\LibraProgramming.Windows.Games.Engine.csproj", "{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F164B33F-9295-4420-8100-38775E41B099}"
+	ProjectSection(SolutionItems) = preProject
+		LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx = LibraProgramming.Windows.Games.Towers_TemporaryKey.pfx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|ARM.ActiveCfg = Debug|ARM
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|ARM.Build.0 = Debug|ARM
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -24,6 +34,7 @@ Global
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|x86.ActiveCfg = Debug|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|x86.Build.0 = Debug|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Debug|x86.Deploy.0 = Debug|x86
+		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|Any CPU.ActiveCfg = Release|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|ARM.ActiveCfg = Release|ARM
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|ARM.Build.0 = Release|ARM
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|ARM.Deploy.0 = Release|ARM
@@ -33,6 +44,22 @@ Global
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|x86.ActiveCfg = Release|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|x86.Build.0 = Release|x86
 		{28A92EA1-0435-436E-8C5A-572BF72349B0}.Release|x86.Deploy.0 = Release|x86
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|ARM.Build.0 = Debug|ARM
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|x64.ActiveCfg = Debug|x64
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|x64.Build.0 = Debug|x64
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|x86.ActiveCfg = Debug|x86
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Debug|x86.Build.0 = Debug|x86
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|ARM.ActiveCfg = Release|ARM
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|ARM.Build.0 = Release|ARM
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|x64.ActiveCfg = Release|x64
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|x64.Build.0 = Release|x64
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|x86.ActiveCfg = Release|x86
+		{A834AE47-CA07-4FA7-9C77-2BCAFB12328A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

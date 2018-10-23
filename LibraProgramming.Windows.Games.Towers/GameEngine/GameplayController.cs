@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Input;
-using Windows.UI.Xaml.Controls;
-using LibraProgramming.Windows.Games.Towers.Core.ServiceContainer;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI;
 
@@ -29,7 +23,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
 //        private UserPointer userPointer;
 //        private Seeker seeker;
 
-        [PrefferedConstructor]
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
         {
             this.waveFactory = waveFactory;
