@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.Foundation;
+﻿using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
@@ -7,18 +6,13 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
     /// <summary>
     /// 
     /// </summary>
-    public interface IScene : ISceneNode, IDisposable
+    public interface ICreateResources
     {
-        ResourcesLoader Resources
-        {
-            get;
-        }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="creator"></param>
         /// <returns></returns>
-        IAsyncAction CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator);
+        Task CreateAsync(ICanvasResourceCreatorWithDpi creator);
     }
 }

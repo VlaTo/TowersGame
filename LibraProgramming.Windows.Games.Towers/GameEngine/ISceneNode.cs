@@ -1,33 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ISceneNode
     {
+        /// <summary>
+        /// 
+        /// </summary>
         ISceneNode Parent
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         ICollection<ISceneNode> Children
         {
             get;
         }
 
-        GameplayController Controller
-        {
-            get;
-        }
-
-        Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="session"></param>
         void Draw(CanvasDrawingSession session);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elapsed"></param>
         void Update(TimeSpan elapsed);
     }
 }

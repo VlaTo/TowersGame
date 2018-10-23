@@ -6,6 +6,7 @@ using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Input;
 using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Brushes;
 using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
@@ -26,12 +27,8 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         public GameplayController(IScene scene, EnemyWaveFactory waveFactory)
         {
             this.waveFactory = waveFactory;
-            game = new Game(scene)
-            {
-                MapSize = new MapSize(60, 60)
-            };
+            game = new Game(scene, new MapSize(24, 24));
             enemyProvider = new EnemyProvider(game.Enemies);
-            scene.SetController(this);
         }
 
         /// <summary>
@@ -94,12 +91,12 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             scene.Children.Add(seeker);
             scene.Children.Add(userPointer);*/
 
-            var transformer = new GameCoordinatesSystem();
             var pathFinder = new AStarPathFinder(game);
-            var enemy = new Enemy(new Position(0, 3), transformer, pathFinder, 250.0f, 0.56f, 1.0f);
-            var background = new MapBackground(spritesheetPath: new Uri("ms-appx:///Assets/Terrains.png"));
-
-            scene.Children.Add(background);
+            var enemy = new Enemy(scene.Resources, game.CoordinatesSystem, new Position(0, 1), pathFinder, 250.0f, 0.56f, 1.0f);
+            var landscape = new Landscape(scene.Resources, game.Map, size);
+            
+            scene.Children.Add(landscape);
+            scene.Children.Add(new Grid(scene.Resources, new Size(25.0d, 25.0d), size));
             scene.Children.Add(enemy);
 
             return scene;
@@ -195,60 +192,6 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
         /// <summary>
         /// 
         /// </summary>
-        private class GameCoordinatesSystem : ICoordinatesSystem
-        {
-            private const float CellHeight = 10.0f;
-            private const float CellWidth = 10.0f;
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="position"></param>
-            /// <returns></returns>
-            public Vector2 GetPoint(Position position)
-            {
-                var point = new Vector2(CellWidth / 2.0f, CellHeight / 2.0f);
-
-                if (position.Column > 0)
-                {
-                    point.X += CellWidth * (position.Column - 1);
-                }
-
-                if (position.Row > 0)
-                {
-                    point.Y += CellHeight * (position.Row - 1);
-                }
-
-                return point;
-            }
-
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="point"></param>
-            /// <returns></returns>
-            public Position GetPosition(Vector2 point)
-            {
-                var column = (int) (point.X / CellWidth);
-                var row = (int) (point.Y / CellHeight);
-
-                if (Math.IEEERemainder(point.X, CellWidth) >= Single.Epsilon)
-                {
-                    column++;
-                }
-
-                if (Math.IEEERemainder(point.Y, CellHeight) >= Single.Epsilon)
-                {
-                    row++;
-                }
-
-                return new Position(column, row);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         private class AStarPathFinder : IPathFinder
         {
             private readonly Game game;
@@ -262,7 +205,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             public IReadOnlyCollection<Position> GetWaypoints(Position position)
             {
                 var map = GetGameHeatMap();
-                var destination = new Position(42, 59);
+                var destination = new Position(23, 23);
 
                 EmitWaveTo(map, position, destination);
 
@@ -280,17 +223,34 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
                     return heatMap;
                 }
 
-                var size = game.MapSize;
-
-                heatMap = new long[size.Rows, size.Columns];
-
-                /*for (var row = 0; row < size.Rows; row++)
+                heatMap = new long[,]
                 {
-                    for (var column = 0; column < size.Columns; column++)
-                    {
-                        heatMap[row, column] = 0;
-                    }
-                }*/
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                };
                 
                 return heatMap;
             }

@@ -6,6 +6,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public sealed class LaserBeam : SceneNode
     {
         private readonly Enemy enemy;
@@ -30,4 +31,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             session.DrawLine(origin, enemy.Position, drawBrush);
         }
     }
+*/
 }

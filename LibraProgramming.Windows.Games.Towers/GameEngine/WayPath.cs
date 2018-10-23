@@ -9,6 +9,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public sealed class WayPath : SceneNode
     {
         private readonly ICollection<Point> waypoints;
@@ -54,4 +55,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
     }
+*/
 }

@@ -8,6 +8,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public sealed class UserPointer : SceneNode
     {
         private readonly Color color;
@@ -46,4 +47,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             session.DrawCircle(Position.ToVector2(), 2.0f, drawBrush);
         }
     }
+*/
 }

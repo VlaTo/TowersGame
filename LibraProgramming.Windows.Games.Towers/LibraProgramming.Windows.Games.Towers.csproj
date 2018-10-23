@@ -124,12 +124,13 @@
     <Compile Include="GameEngine\ISceneNode.cs" />
     <Compile Include="GameEngine\ISceneNodeState.cs" />
     <Compile Include="GameEngine\ICoordinatesSystem.cs" />
-    <Compile Include="GameEngine\LandscapeMap.cs" />
+    <Compile Include="GameEngine\Landscape.cs" />
     <Compile Include="GameEngine\LaserBeam.cs" />
     <Compile Include="GameEngine\LaserTower.cs" />
     <Compile Include="GameEngine\MyHomeBase.cs" />
     <Compile Include="GameEngine\MyHomeBaseHealthIndicator.cs" />
     <Compile Include="GameEngine\NodeState.cs" />
+    <Compile Include="GameEngine\ResourcesLoader.cs" />
     <Compile Include="GameEngine\Scene.cs" />
     <Compile Include="GameEngine\SceneNode.Collection.cs" />
     <Compile Include="GameEngine\SceneNode.cs" />
@@ -163,7 +164,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Terrains.png" />
+    <Content Include="Assets\Terrain.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

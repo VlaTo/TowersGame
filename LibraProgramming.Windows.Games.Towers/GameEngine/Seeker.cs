@@ -9,6 +9,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public class Seeker : StateAwareSceneNode<Seeker>
     {
         private readonly Color borderColor;
@@ -99,4 +100,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
     }
+*/
 }

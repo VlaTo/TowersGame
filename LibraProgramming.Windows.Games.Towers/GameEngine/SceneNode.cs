@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
-using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
@@ -41,23 +39,9 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             get;
         }
 
-        public virtual GameplayController Controller => parent?.Controller;
-
         protected SceneNode()
         {
             Children = new SceneNodeCollection(this);
-        }
-
-        public virtual Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
-        {
-            var tasks = new List<Task>();
-
-            foreach (ISceneNode child in Children)
-            {
-                tasks.Add(child.CreateResourcesAsync(creator, reason));
-            }
-
-            return Task.WhenAll(tasks);
         }
 
         public virtual void Draw(CanvasDrawingSession session)

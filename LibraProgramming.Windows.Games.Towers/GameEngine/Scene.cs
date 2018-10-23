@@ -5,13 +5,16 @@
     /// </summary>
     public class Scene : SceneNode, IScene
     {
-        private GameplayController controller;
+        public ResourcesLoader Resources
+        {
+            get;
+        }
 
         public override GameplayController Controller => controller;
 
         public void SetController(GameplayController value)
         {
-            controller = value;
+            return Resources.CreateAsync(creator).AsAsyncAction();
         }
 
         /// <summary>

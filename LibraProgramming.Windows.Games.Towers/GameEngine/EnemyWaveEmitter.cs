@@ -81,16 +81,16 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             enemyKilled = new WeakEventHandler<EnemyEventArgs>();
             Position = position;
             Waypoints = waypoints;
+            State = new StartupTimeoutState(TimeSpan.FromSeconds(1.0d));
         }
 
-        public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
+        /*public override Task CreateResourcesAsync(ICanvasResourceCreatorWithDpi creator, CanvasCreateResourcesReason reason)
         {
             brush = new CanvasSolidColorBrush(creator, color);
-            State = new StartupTimeoutState(TimeSpan.FromSeconds(1.0d));
             Creator = creator;
 
             return base.CreateResourcesAsync(creator, reason);
-        }
+        }*/
 
         public override void Draw(CanvasDrawingSession session)
         {
@@ -105,7 +105,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
         }
 
-        public Point GetSpawnPoint()
+        /*public Point GetSpawnPoint()
         {
             if (null != Waypoints)
             {
@@ -121,7 +121,7 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             }
 
             return new Point();
-        }
+        }*/
 
         public void ReportEnemyReachedEnd(Enemy enemy)
         {

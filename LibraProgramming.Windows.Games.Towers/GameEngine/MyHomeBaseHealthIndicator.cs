@@ -8,6 +8,7 @@ using Microsoft.Graphics.Canvas.UI;
 
 namespace LibraProgramming.Windows.Games.Towers.GameEngine
 {
+/*
     public class MyHomeBaseHealthIndicator : SceneNode
     {
         private readonly MyHomeBase homeBase;
@@ -54,4 +55,5 @@ namespace LibraProgramming.Windows.Games.Towers.GameEngine
             );
         }
     }
+*/
 }
